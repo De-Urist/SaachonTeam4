@@ -1,5 +1,9 @@
 package Objects;
 
+import Services.BloodDataChecker;
+import Services.ConsultationChecker;
+
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +15,8 @@ public class Patient {
     private Date lastOnline;
     private List<BloodData> dataList = new ArrayList<>();
     private List<Consultation> consultationList = new ArrayList<>();
+    private BloodDataChecker bloodChecker = new BloodDataChecker();         //use this class to import methods
+    private ConsultationChecker consultChecker = new ConsultationChecker(); //this one too
 
     //constructor should be called once, in the first creation
     //of the patient's account. (Sign up)
@@ -21,6 +27,9 @@ public class Patient {
         this.name = name;
         this.email = email;
         this.lastOnline = lastOnline;
+    }
+    public Patient(){
+
     }
     //Idea. Double constructors.
     //One for first initialization INSERT -> db
@@ -42,7 +51,7 @@ public class Patient {
         //get name from doctor with DoctorID
         return "ABC";
     }
-    //2 redundant methods?
+
     public List<BloodData> getDataList() {
         return dataList;
     }
@@ -55,15 +64,29 @@ public class Patient {
         this.name = name;
     }
     public void setLastOnline(Date lastOnline) {
+        //Update every time user logs in
         this.lastOnline = lastOnline;
     }
 
     //Other methods
     public void deleteSelf(){
         //DELETE from table Patients with id
+        //also DELETE from table BloodData with id
     }
     public void deleteData(BloodData data){
         //DELETE from table BloodData
         dataList.remove(data);
     }
+
+    //redundant
+    public boolean hadLastMonthConsultation(int id){
+        List<Consultation> lastMonthList = new ArrayList<>();
+        if(lastMonthList.isEmpty()){
+            return true; //had a consultation in the last month
+        }
+        else{
+            return false;
+        }
+    }
+
 }

@@ -4,9 +4,6 @@ import java.util.Date;
 
 public class Consultation {
     private int id;
-    //belongs to?
-    //PatientID
-    //DoctorID
     private String medicineName = "";
     private int dosage;
     private Date creationDate;
@@ -19,6 +16,9 @@ public class Consultation {
         this.creationDate = creationDate;
         this.lastModified = lastModified;
     }
+
+    public Consultation(){}
+
 
     //getters
     public int getId() {

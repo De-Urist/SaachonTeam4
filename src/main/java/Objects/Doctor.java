@@ -16,6 +16,9 @@ public class Doctor {
         this.name = name;
         this.email = email;
     }
+    public Doctor(){
+
+    }
 
     //getters
     public int getId() {
@@ -28,9 +31,11 @@ public class Doctor {
         return email;
     }
     public List<Patient> getPatientsList() {
+        //probably gonna need a method that also queries the database
         return patientsList;
     }
     public List<Consultation> getConsultationsList() {
+        //probably gonna need a method that also queries the database
         return consultationsList;
     }
 
@@ -43,5 +48,8 @@ public class Doctor {
     }
 
     //other methods
+    public void deleteSelf(){
+        //DELETE from table Doctors with id
+    }
 
 }

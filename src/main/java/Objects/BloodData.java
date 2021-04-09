@@ -4,20 +4,24 @@ import java.util.Date;
 
 public class BloodData {
     private int id;
-    private Date DataDate;
+    private Date dataDate;
+    private Date dataTime;
     private int glucoseLevel;
     private int carbIntake;
-    private Patient belongsTo; //wrong logic?
 
     //similarly to patient, call once on creation
-    public BloodData(int id, Date dataDate, int glucoseLevel, int carbIntake, Patient belongsTo) {
+    public BloodData(int id, Date dataDate, Date dataTime, int glucoseLevel, int carbIntake) {
         this.id = id;
-        DataDate = dataDate;
+        this.dataDate = dataDate;
+        this.dataTime = dataTime;
         this.glucoseLevel = glucoseLevel;
         this.carbIntake = carbIntake;
-        this.belongsTo = belongsTo;
         //After this object is created, INSERT the data into
         //the BloodData table
+    }
+
+    public BloodData(){
+
     }
 
     //Get via queries to the database
@@ -27,7 +31,7 @@ public class BloodData {
         return id;
     }
     public Date getDataDate() {
-        return DataDate;
+        return dataDate;
     }
     public int getGlucoseLevel() {
         return glucoseLevel;
@@ -35,14 +39,23 @@ public class BloodData {
     public int getCarbIntake() {
         return carbIntake;
     }
-    public Patient getBelongsTo() {
-        return belongsTo;
+    public Date getDataTime() {
+        return dataTime;
+    }
+
+    //toString
+    @Override
+    public String toString() {
+        return "BloodData{" +
+                "glucoseLevel=" + glucoseLevel + "mg/dL" +
+                ", carbIntake=" + carbIntake + "g" +
+                '}';
     }
 
     //Setters mainly for updating
     public void setDataDate(Date dataDate) {
         //updates time, to the current time
-        DataDate = new java.util.Date();
+        dataDate = new java.util.Date();
     }
     public void setGlucoseLevel(int glucoseLevel) {
         //mathematical types for dynamic calculation?
@@ -51,8 +64,8 @@ public class BloodData {
     public void setCarbIntake(int carbIntake) {
         this.carbIntake = carbIntake;
     }
-    //Redundant?
-    public void setBelongsTo(Patient belongsTo) {
-        this.belongsTo = belongsTo;
+    public void setDataTime(Date dataTime) {
+        //updates data time
+        this.dataTime = dataTime;
     }
 }
