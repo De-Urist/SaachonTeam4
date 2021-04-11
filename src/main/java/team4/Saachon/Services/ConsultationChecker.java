@@ -1,7 +1,7 @@
-package Services;
+package team4.Saachon.Services;
 
-import Objects.Consultation;
-import Objects.Patient;
+import team4.Saachon.Objects.Consultation;
+import team4.Saachon.Objects.Patient;
 
 import java.util.ArrayList;
 import java.util.List;

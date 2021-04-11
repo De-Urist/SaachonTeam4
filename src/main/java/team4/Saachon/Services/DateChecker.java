@@ -1,9 +1,7 @@
-package Services;
+package team4.Saachon.Services;
 
 //Class for checking a 30 day timeframe between 2 dates
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class DateChecker {
 

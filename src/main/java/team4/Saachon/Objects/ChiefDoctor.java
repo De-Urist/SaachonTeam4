@@ -1,4 +1,4 @@
-package Objects;
+package team4.Saachon.Objects;
 
 public class ChiefDoctor {
     private int id;
