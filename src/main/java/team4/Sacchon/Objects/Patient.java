@@ -1,7 +1,7 @@
-package team4.Saachon.Objects;
+package team4.Sacchon.Objects;
 
-import team4.Saachon.Services.BloodDataChecker;
-import team4.Saachon.Services.ConsultationChecker;
+import team4.Sacchon.Services.BloodDataChecker;
+import team4.Sacchon.Services.ConsultationChecker;
 
 import java.util.ArrayList;
 import java.util.Date;

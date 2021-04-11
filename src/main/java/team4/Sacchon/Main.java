@@ -1,4 +1,8 @@
-package team4.Saachon;
+package team4.Sacchon;
+
+import team4.Sacchon.jpautil.JpaUtil;
+
+import javax.persistence.EntityManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -8,7 +12,10 @@ public class Main {
         DateChecker test = new DateChecker();
         boolean test1 = test.compareDates(newDate,oldDate);
         */
-
+        System.out.println("Hello World!");
+        EntityManager em = JpaUtil.getEntityManager();
+        System.out.println("Connection established");
+        em.close();
 
     }
 }
