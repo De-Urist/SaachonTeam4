@@ -3,6 +3,7 @@ package team4.Sacchon.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
@@ -13,9 +14,8 @@ public class Consultation {
 
     private int dosage;
     private String prescriptionName;
-    //maybe add
-    //creationDate when this consultation was created
-    //lastModified when this consultation was last changed
+    private Date creationDate;
+    private Date lastModified;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Patient patient;
