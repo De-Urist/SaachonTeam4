@@ -20,7 +20,7 @@ public class Patient{
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Doctor doctor;
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BloodData> bloodDataList;
+    private List<Measurement> measurementList;
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Consultation> consultationList;
 }

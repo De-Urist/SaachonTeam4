@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class BloodData {
+public class Measurement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -23,7 +23,7 @@ public class BloodData {
     //toString (adds mg/dl and g to glucoseLever and carbIntake respectively)
     @Override
     public String toString() {
-        return "BloodData{" +
+        return "Measurement{" +
                 "glucoseLevel=" + glucoseLevel + "mg/dL" +
                 ", carbIntake=" + carbIntake + "g" +
                 '}';
