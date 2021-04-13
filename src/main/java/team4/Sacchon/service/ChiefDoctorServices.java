@@ -1,4 +1,4 @@
-package team4.Sacchon.Services;
+package team4.Sacchon.service;
 
 import team4.Sacchon.model.ChiefDoctor;
 import team4.Sacchon.repository.ChiefDoctorRepository;
