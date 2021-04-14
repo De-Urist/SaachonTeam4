@@ -19,4 +19,5 @@ public class PatientRepository extends Repository <Patient,Integer>{
     public String getClassName() {
         return Patient.class.getName();
     }
+
 }
