@@ -19,7 +19,7 @@ public class CustomRouter {
         //router.attach("/signup", LoginResource.class)
 
         //Patients
-        router.attach("/patient", PatientResource.class);
+        router.attach("/patient", PatientListResource.class);
         router.attach("/patient/{id}", PatientResource.class);
 
         //Doctors

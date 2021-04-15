@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class Repository <Obj,Id> {
 
-    private EntityManager em;
+    private final EntityManager em;
     public abstract Class<Obj> getEntityClass();
     public abstract String getClassName();
 
@@ -31,14 +31,11 @@ public abstract class Repository <Obj,Id> {
 
     //Read
     public Obj read(Id id){
-        Obj obj = em.find(getEntityClass(), id);
-        return obj;
+        return em.find(getEntityClass(), id);
     }
 
     public List<Obj> findAll(){
-        Query query = em.createQuery("from " + getClassName());
-        List<Obj> list1 = new ArrayList<>(query.getResultList());
-        return  list1;
+        return em.createQuery("from " + getClassName()).getResultList();
     }
 
     //Update

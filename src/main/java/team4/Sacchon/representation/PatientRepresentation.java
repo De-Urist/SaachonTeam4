@@ -9,12 +9,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class PatientRepresentation {
     private int id;
-
     private String name;
     private String username;
     private String password;
     private Date lastLogin;
-
     private String uri;
 
     public PatientRepresentation(Patient patient){
@@ -22,7 +20,6 @@ public class PatientRepresentation {
             name = patient.getName();
             username = patient.getUsername();
             password = patient.getPassword();
-
             uri = "http://localhost:9000/v1/patient/" + patient.getId();
         }
     }
