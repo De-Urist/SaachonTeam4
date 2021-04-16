@@ -26,8 +26,8 @@ public class CorsFilter {
 
             @Override
             protected int beforeHandle(Request request, Response response) {
-                // Initialize response headers
 
+                // Initialize response headers
                 Series<Header> responseHeaders = (Series<Header>) response
                         .getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
                 if (responseHeaders == null) {
@@ -35,7 +35,6 @@ public class CorsFilter {
                 }
 
                 // Request headers
-
                 Series<Header> requestHeaders = (Series<Header>) request.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
                 String requestOrigin = requestHeaders.getFirstValue("Origin", false, "*");
                 String rh = requestHeaders.getFirstValue( "Access-Control-Request-Headers", false, "*");
@@ -53,11 +52,9 @@ public class CorsFilter {
                 response.setAccessControlAllowMethods(methodHashSet);
 
                 // Set response headers
-
                 response.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,  responseHeaders);
 
                 // Handle HTTP methods
-
                 if (Method.OPTIONS.equals(request.getMethod())) {
                     return Filter.STOP;
                 }
