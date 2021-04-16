@@ -7,12 +7,11 @@ import team4.Sacchon.model.Doctor;
 @Data
 @NoArgsConstructor
 public class DoctorRepresentation {
-    private int id;
 
+    private int id;
     private String name;
     private String username;
     private String password;
-
     private String uri;
 
     public DoctorRepresentation(Doctor doctor){
@@ -20,10 +19,10 @@ public class DoctorRepresentation {
             name = doctor.getName();
             username = doctor.getUsername();
             password = doctor.getPassword();
-
             uri = "http://localhost:9000/v1/doctor/" + doctor.getId();
         }
     }
+
     public Doctor createDoctor(){
         Doctor doctor = new Doctor();
         doctor.setName(name);

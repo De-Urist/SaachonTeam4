@@ -15,8 +15,8 @@ public class ConsultationRepresentation {
     private String prescriptionName;
     private Date creationDate;
     private Date lastModified;
-    //foreign key id of doctor and patient
-
+    private int doctorId;
+    private int patientId;
     private String uri;
 
     public ConsultationRepresentation(Consultation consultation){
@@ -25,11 +25,14 @@ public class ConsultationRepresentation {
             prescriptionName = consultation.getPrescriptionName();
             creationDate = consultation.getCreationDate();
             lastModified = consultation.getLastModified();
+            if (consultation.getDoctor() != null)
+                doctorId = consultation.getDoctor().getId();
+            if (consultation.getPatient() != null)
+                patientId = consultation.getPatient().getId();
 
             uri = "http://localhost:9000/v1/consultation/" + consultation.getId();
         }
     }
-
     public Consultation createConsultation(){
         Consultation consultation = new Consultation();
         consultation.setDosage(dosage);
