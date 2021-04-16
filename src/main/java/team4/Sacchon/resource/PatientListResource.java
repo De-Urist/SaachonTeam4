@@ -22,8 +22,8 @@ public class PatientListResource extends ServerResource {
         em.close();
 
         return patients.stream()
-        .map(PatientRepresentation::new)
-        .collect(Collectors.toList());
+                .map(PatientRepresentation::new)
+                .collect(Collectors.toList());
     }
 
     @Post("json")

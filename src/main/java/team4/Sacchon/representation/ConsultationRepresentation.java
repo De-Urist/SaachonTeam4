@@ -15,6 +15,7 @@ public class ConsultationRepresentation {
     private String prescriptionName;
     private Date creationDate;
     private Date lastModified;
+    //foreign key id of doctor and patient
 
     private String uri;
 
@@ -28,6 +29,7 @@ public class ConsultationRepresentation {
             uri = "http://localhost:9000/v1/consultation/" + consultation.getId();
         }
     }
+
     public Consultation createConsultation(){
         Consultation consultation = new Consultation();
         consultation.setDosage(dosage);

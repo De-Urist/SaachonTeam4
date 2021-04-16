@@ -20,4 +20,6 @@ public class ConsultationRepository extends Repository <Consultation, Integer>{
     public String getClassName() {
         return Consultation.class.getName();
     }
+
+
 }
