@@ -7,40 +7,29 @@ import team4.Sacchon.resource.*;
 public class CustomRouter {
     private Application application;
 
-    public CustomRouter(Application application){
+    public CustomRouter(Application application) {
         this.application = application;
     }
-    public Router publicResources(){
+
+    public Router publicResources() {
         Router router = new Router();
-        //Login for different users (Doctor,Patient,ChiefDoctor)
-        //router.attach("/login", LoginResource.class)
-
-        //Similarly for signup
-        //router.attach("/signup", LoginResource.class)
-
-        //Patients
-        router.attach("/patient", PatientResource.class);
-        //router.attach("/patient", PatientListResource.class);
-        router.attach("/patient/{id}", PatientResource.class);
-
-        //Doctors
-        router.attach("/doctor", DoctorResource.class);
-        router.attach("/doctor/{id}", DoctorResource.class);
-
-        //ChiefDoctors
-        router.attach("/chief", ChiefDoctorResource.class);
-        router.attach("/chief/{id}", ChiefDoctorResource.class);
-
-        //Consultations
-        router.attach("/consultation", ConsultationResource.class);
-        router.attach("/consultation/{id}", ConsultationResource.class);
-
-        //Measurements
-        router.attach("/measurement", MeasurementResource.class);
-        router.attach("/measurement/{id}", MeasurementResource.class);
-
-        //TEST
         router.attach("/ping", PingServerResource.class);
+
+        return router;
+    }
+
+    public Router protectedResources() {
+        Router router = new Router();
+        router.attach("/patient", PatientListResource.class);
+        router.attach("/patient/{id}", PatientResource.class);
+//        router.attach("/doctor", DoctorListResource.class);
+        router.attach("/doctor/{id}", DoctorResource.class);
+//        router.attach("/chief", ChiefDoctorListResource.class);
+        router.attach("/chief/{id}", ChiefDoctorResource.class);
+//        router.attach("/consultation", ConsultationListResource.class);
+        router.attach("/consultation/{id}", ConsultationResource.class);
+//        router.attach("/measurement", MeasurementListResource.class);
+        router.attach("/measurement/{id}", MeasurementResource.class);
         return router;
     }
 }

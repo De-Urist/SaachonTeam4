@@ -8,13 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Patient{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String name;
-    private String username;
-    private String password;
+public class Patient extends User{
     private Date lastLogin;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

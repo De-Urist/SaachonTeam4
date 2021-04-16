@@ -9,7 +9,6 @@ import team4.Sacchon.repository.PatientRepository;
 import team4.Sacchon.representation.PatientRepresentation;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

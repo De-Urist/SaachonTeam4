@@ -26,9 +26,8 @@ public class PatientRepository extends Repository <Patient,Integer>{
 
 
     public Patient getByUsername(String username){
-        Patient pt = em.createQuery("from Patient p WHERE p.username= :username", Patient.class)
+        return em.createQuery("SELECT p from Patient p WHERE p.username = :username", Patient.class)
                 .setParameter("username", username)
                 .getSingleResult();
-        return pt;
     }
 }

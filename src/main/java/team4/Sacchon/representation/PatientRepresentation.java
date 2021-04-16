@@ -15,6 +15,7 @@ public class PatientRepresentation {
     private String password;
     private Date lastLogin;
     private int doctorId;
+    private String role;
     private String uri;
 
     public PatientRepresentation(Patient patient){
@@ -26,6 +27,7 @@ public class PatientRepresentation {
             if (patient.getDoctor() != null) {
                 doctorId = patient.getDoctor().getId();
             }
+            role = patient.getRole();
             uri = "http://localhost:9000/v1/patient/" + patient.getId();
         }
     }

@@ -7,15 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Doctor{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private String name;
-    private String username;
-    private String password;
-
+public class Doctor extends User{
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Patient> patients;
 

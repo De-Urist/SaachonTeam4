@@ -17,8 +17,8 @@ public class MeasurementRepresentation {
     private int patientId;
     private String uri;
 
-    public MeasurementRepresentation(Measurement measurement){
-        if(measurement != null){
+    public MeasurementRepresentation(Measurement measurement) {
+        if (measurement != null) {
             date = measurement.getDate();
             glucoseLevel = measurement.getGlucoseLevel();
             carbIntake = measurement.getCarbIntake();
@@ -28,7 +28,7 @@ public class MeasurementRepresentation {
         }
     }
 
-    public Measurement createMeasurement(){
+    public Measurement createMeasurement() {
         Measurement measurement = new Measurement();
         measurement.setDate(date);
         measurement.setGlucoseLevel(glucoseLevel);

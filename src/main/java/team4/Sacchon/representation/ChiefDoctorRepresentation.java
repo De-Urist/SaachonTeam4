@@ -12,22 +12,25 @@ public class ChiefDoctorRepresentation {
     private String name;
     private String username;
     private String password;
+    private String role;
     private String uri;
 
-    public ChiefDoctorRepresentation(ChiefDoctor cdoctor){
-        if(cdoctor != null){
+    public ChiefDoctorRepresentation(ChiefDoctor cdoctor) {
+        if (cdoctor != null) {
             name = cdoctor.getName();
             username = cdoctor.getUsername();
             password = cdoctor.getPassword();
+            role = cdoctor.getRole();
             uri = "http://localhost:9000/v1/chief/" + cdoctor.getId();
         }
     }
 
-    public ChiefDoctor createChiefDoctor(){
+    public ChiefDoctor createChiefDoctor() {
         ChiefDoctor cdoctor = new ChiefDoctor();
         cdoctor.setName(name);
         cdoctor.setUsername(username);
         cdoctor.setPassword(password);
+        cdoctor.setRole(role);
         return cdoctor;
     }
 }

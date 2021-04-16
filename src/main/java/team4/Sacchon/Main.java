@@ -3,24 +3,32 @@ package team4.Sacchon;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
-import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
-import org.restlet.engine.application.CorsFilter;
 import org.restlet.routing.Router;
+import org.restlet.security.ChallengeAuthenticator;
+import org.restlet.security.Role;
 import team4.Sacchon.router.CustomRouter;
 import team4.Sacchon.jpautil.JpaUtil;
+import team4.Sacchon.security.CorsFilter;
+import team4.Sacchon.security.Shield;
 
 import javax.persistence.EntityManager;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.logging.Logger;
 
 public class Main extends Application {
+
     public static final Logger LOGGER = Engine.getLogger(Main.class);
 
-    public static void main(String[] args) throws Exception {
+    public Main(){
+        setName("SacchonApplication");
 
+        getRoles().add(new Role(this, Shield.ROLE_CHIEF));
+        getRoles().add(new Role(this, Shield.ROLE_DOCTOR));
+        getRoles().add(new Role(this, Shield.ROLE_PATIENT));
+    }
+
+    public static void main(String[] args) throws Exception {
         EntityManager em = JpaUtil.getEntityManager();
         System.out.println("Connection established");
         //Entity Manager commands for testing
@@ -39,18 +47,15 @@ public class Main extends Application {
     @Override
     public Restlet createInboundRoot() {
         CustomRouter customRouter = new CustomRouter(this);
+        Shield shield = new Shield(this);
         Router publicRouter = customRouter.publicResources();
-
-        CorsFilter corsFilter = new CorsFilter(getContext(),publicRouter);
-        corsFilter.setAllowedCredentials(true);
-        corsFilter.setAllowedOrigins(new HashSet<>(Arrays.asList("*")));
-        HashSet<Method> methodHashSet = new HashSet<>();
-        methodHashSet.add(Method.GET);
-        methodHashSet.add(Method.POST);
-        methodHashSet.add(Method.PUT);
-        methodHashSet.add(Method.DELETE);
-        corsFilter.setDefaultAllowedMethods(methodHashSet);
-
-        return corsFilter;
+        ChallengeAuthenticator apiGuard = shield.createApiGuard();
+        // Create the api router, protected by a guard
+        Router protectedRouter = customRouter.protectedResources();
+        apiGuard.setNext(protectedRouter);
+        publicRouter.attachDefault(apiGuard);
+        // return publicRouter;
+        CorsFilter corsFilter = new CorsFilter(this);
+        return corsFilter.createCorsFilter(publicRouter);
     }
 }

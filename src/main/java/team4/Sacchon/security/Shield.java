@@ -7,9 +7,9 @@ import org.restlet.security.Verifier;
 
 public class Shield {
 
-    public static final String ROLE_ADMIN = "chief";
-    public static final String ROLE_OWNER = "owner";
-    public static final String ROLE_USER = "user";
+    public static final String ROLE_CHIEF = "chief";
+    public static final String ROLE_DOCTOR = "doctor";
+    public static final String ROLE_PATIENT = "patient";
 
     private Application app;
 
@@ -19,7 +19,7 @@ public class Shield {
 
     public ChallengeAuthenticator createApiGuard(){
         ChallengeAuthenticator apiGuard = new ChallengeAuthenticator(
-                app.getContext(), ChallengeScheme.HTTP_BASIC, "real");
+                app.getContext(), ChallengeScheme.HTTP_BASIC, "realm");
         Verifier verifier = new CustomVerifier();
         apiGuard.setVerifier(verifier);
 

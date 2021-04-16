@@ -9,12 +9,6 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class ChiefDoctor{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class ChiefDoctor extends User{
 
-    private String name;
-    private String username;
-    private String password;
 }
