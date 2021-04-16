@@ -8,21 +8,28 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class PatientRepresentation {
+
     private int id;
     private String name;
     private String username;
     private String password;
     private Date lastLogin;
+    private int doctorId;
     private String uri;
 
     public PatientRepresentation(Patient patient){
-        if(patient != null){
+        if (patient != null){
             name = patient.getName();
             username = patient.getUsername();
             password = patient.getPassword();
+            lastLogin = patient.getLastLogin();
+            if (patient.getDoctor() != null) {
+                doctorId = patient.getDoctor().getId();
+            }
             uri = "http://localhost:9000/v1/patient/" + patient.getId();
         }
     }
+
     public Patient createPatient(){
         Patient patient = new Patient();
         patient.setName(name);
