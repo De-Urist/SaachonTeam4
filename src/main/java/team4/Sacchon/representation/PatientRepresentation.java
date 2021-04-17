@@ -37,6 +37,7 @@ public class PatientRepresentation {
         patient.setName(name);
         patient.setUsername(username);
         patient.setPassword(password);
+        patient.setRole(role);
         return patient;
     }
 }
