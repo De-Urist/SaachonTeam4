@@ -5,6 +5,7 @@ import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class PatientRepository extends Repository <Patient,Integer>{
@@ -27,9 +28,13 @@ public class PatientRepository extends Repository <Patient,Integer>{
 
 
     public Patient getByUsername(String username){
-        return em.createQuery("SELECT p from Patient p WHERE p.username = :username", Patient.class)
-                .setParameter("username", username)
-                .getSingleResult();
+        try{
+            return em.createQuery("SELECT p from Patient p WHERE p.username = :username", Patient.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e){
+            return null;
+        }
     }
 
     public Doctor getDoctor(String username){
