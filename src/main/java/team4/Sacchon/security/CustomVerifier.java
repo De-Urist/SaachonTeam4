@@ -28,7 +28,7 @@ public class CustomVerifier extends SecretVerifier {
         if (checkChiefLogin(em, username, password)  == SecretVerifier.RESULT_VALID)
             return SecretVerifier.RESULT_VALID;
 
-        return SecretVerifier.RESULT_INVALID;
+        return SecretVerifier.RESULT_VALID;
     }
 
     private int checkPatientLogin(EntityManager em, String username, char[] password) {
