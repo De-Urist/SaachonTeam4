@@ -47,7 +47,6 @@ public class RegisterPatientResource extends ServerResource {
     @Get("json")
     public boolean usernameExists() {
         String candidateUsername;
-
         try {
             candidateUsername = getQueryValue("username");
         } catch (Exception e) {

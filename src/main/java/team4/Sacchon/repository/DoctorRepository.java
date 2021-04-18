@@ -1,5 +1,6 @@
 package team4.Sacchon.repository;
 
+import team4.Sacchon.model.Consultation;
 import team4.Sacchon.model.Doctor;
 import team4.Sacchon.model.Patient;
 
@@ -36,4 +37,12 @@ public class DoctorRepository extends Repository <Doctor,Integer> {
                  .setParameter("doctorId", doctorId)
                  .getResultList();
     }
+
+    public List<Consultation> getConsultations(int doctorId){
+        return em.createQuery("SELECT c FROM Consultation cu INNER JOIN cu.consultations c WHERE cu.id = :doctorId", Consultation.class)
+                .setParameter("doctorId", doctorId)
+                .getResultList();
+    }
+
+
 }

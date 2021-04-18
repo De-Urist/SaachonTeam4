@@ -1,5 +1,6 @@
 package team4.Sacchon.repository;
 
+import team4.Sacchon.model.Consultation;
 import team4.Sacchon.model.Doctor;
 import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
@@ -43,4 +44,24 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .setParameter("username", username)
                 .getResultList();
     }
+
+    //Make it via Date range (TO DO)
+    public List<Consultation> getConsultations(String username){
+        return em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE p.username = :username", Consultation.class)
+                .setParameter("username", username)
+                .getResultList();
+    }
+
+    //Make it via Date range (TO DO)
+    public Double getAverageGlucoseLevel(String username){
+        return (Double) em.createQuery("SELECT avg(glucoseLevel) FROM Patient p inner join p.measurement avg(glucoseLevel) WHERE p.username = :username ")
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+    public Double getAverageCarbIntake(String username){
+        return (Double) em.createQuery("SELECT avg(carbIntake) FROM Patient p inner join p.measurement avg(carbIntake) WHERE p.username = :username ")
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+
 }
