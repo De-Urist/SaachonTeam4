@@ -5,7 +5,6 @@ import team4.Sacchon.model.Measurement;
 
 import javax.persistence.EntityManager;
 
-
 public class ConsultationRepository extends Repository <Consultation, Integer>{
 
     private EntityManager em;

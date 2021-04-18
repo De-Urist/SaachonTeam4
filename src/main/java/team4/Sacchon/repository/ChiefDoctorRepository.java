@@ -33,10 +33,10 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
     }
 
     public List<Doctor> getAllDoctors(){
-        return em.createQuery("SELECT * FROM Doctor",Doctor.class).getResultList();
+        return em.createQuery("SELECT d FROM Doctor d",Doctor.class).getResultList();
     }
 
     public List<Patient> getAllPatients(){
-        return em.createQuery("SELECT * FROM Patient",Patient.class).getResultList();
+        return em.createQuery("SELECT p FROM Patient p",Patient.class).getResultList();
     }
 }
