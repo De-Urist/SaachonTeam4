@@ -15,11 +15,11 @@ public class RegisterPatientResource extends ServerResource {
     @Post("json")
     public ApiResult<PatientRepresentation> registerPatient(PatientRepresentation patientRepresentation) {
         if (patientRepresentation == null)
-            return new ApiResult<>(null, 400, "No input data to create the customer");
+            return new ApiResult<>(null, 400, "No input data to create the patient");
         if (patientRepresentation.getName() == null)
-            return new ApiResult<>(null, 400, "No name was given to create the customer");
+            return new ApiResult<>(null, 400, "No name was given to create the patient");
         if (patientRepresentation.getUsername() == null)
-            return new ApiResult<>(null, 400, "No username was given to create the customer");
+            return new ApiResult<>(null, 400, "No username was given to create the patient");
         if (usernameExists(patientRepresentation.getUsername()))
             return new ApiResult<>(null, 400, "Duplicate username");
 
@@ -27,14 +27,14 @@ public class RegisterPatientResource extends ServerResource {
         EntityManager em = JpaUtil.getEntityManager();
         PatientRepository patientRepository = new PatientRepository(em);
         patientRepository.save(patient);
-        return new ApiResult<>(patientRepresentation, 200, "The customer was successfully created");
+        return new ApiResult<>(patientRepresentation, 200, "The patient was successfully created");
     }
 
     public boolean usernameExists(String candidateUsername) {
         EntityManager em = JpaUtil.getEntityManager();
         Patient patient;
         try {
-            patient = em.createQuery("SELECT u from Patient u where u.username= :candidate", Patient.class)
+            patient = em.createQuery("SELECT p from Patient p where p.username= :candidate", Patient.class)
                     .setParameter("candidate", candidateUsername)
                     .getSingleResult();
         } catch (Exception e) {
