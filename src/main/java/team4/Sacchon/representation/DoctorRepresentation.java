@@ -30,6 +30,7 @@ public class DoctorRepresentation {
         doctor.setName(name);
         doctor.setUsername(username);
         doctor.setPassword(password);
+        doctor.setRole(role);
         return doctor;
     }
 }
