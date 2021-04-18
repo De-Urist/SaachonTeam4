@@ -56,3 +56,4 @@ public class RegisterDoctorResource extends ServerResource {
         return usernameExists(candidateUsername);
     }
 }
+
