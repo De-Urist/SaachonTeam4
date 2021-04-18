@@ -24,19 +24,19 @@ public class ConsultationRepository extends Repository <Consultation, Integer>{
     }
 
     public Consultation getByPatientId(int patientId){
-        return em.createQuery("from Consultation c WHERE c.patient.id= :patientId ", Consultation.class)
+        return em.createQuery("SELECT c FROM Consultation cp inner join cp.patients c WHERE cp.id = :patientId ", Consultation.class)
                 .setParameter("patientId", patientId)
                 .getSingleResult();
     }
 
     public Consultation getByDoctorId(int doctorId){
-        return em.createQuery("from Consultation c WHERE c.doctorId.id= :doctorId ", Consultation.class)
+        return em.createQuery("SELECT c FROM Consultation cd inner join cd.doctors c WHERE cd.id = :doctorId" , Consultation.class)
                 .setParameter("doctorId", doctorId)
                 .getSingleResult();
     }
 
     public Consultation getByBoth(int doctorId, int patientId){
-        return em.createQuery("from Consultation c WHERE c.doctorId.id= :doctorId AND c.patient.id= :patientId", Consultation.class)
+        return em.createQuery("SELECT c FROM Consultation cp inner join cp.patients c WHERE cp.id = :patientId AND cd inner join cd.doctors c WHERE cd.id = :doctorId", Consultation.class)
                 .setParameter("doctorId", doctorId)
                 .setParameter("patientId", patientId)
                 .getSingleResult();
