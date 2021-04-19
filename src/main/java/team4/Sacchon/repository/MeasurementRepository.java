@@ -4,6 +4,7 @@ import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +26,14 @@ public class MeasurementRepository extends Repository<Measurement,Integer>{
         return Measurement.class.getName();
     }
 
-    public List<Measurement> getById(int id){
-        return em.createQuery("SELECT m from Measurement m WHERE m.id = :id", Measurement.class)
-                .setParameter("id", id)
-                .getResultList();
+    public Measurement getById(int id){
+        try {
+            return em.createQuery("SELECT m from Measurement m WHERE m.id = :id", Measurement.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<Measurement> getMeasurementsOf(int id){

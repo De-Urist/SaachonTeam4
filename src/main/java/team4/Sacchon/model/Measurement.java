@@ -16,7 +16,7 @@ public class Measurement {
     private int glucoseLevel;
     private int carbIntake;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Patient patient;
 
 
