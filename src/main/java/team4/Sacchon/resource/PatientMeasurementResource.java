@@ -88,7 +88,7 @@ public class PatientMeasurementResource extends ServerResource {
             return new ApiResult<>(measurementRepresentationList, 200, "All patient measurements");
         } else {
             Double average =0.0;
-            if (type.equals("carb")) {
+            if (type.equals("glucose")) {
                 average = measurementRepository.getAverageGlucoseOfMeasurements(patient.getId(), fromDate, toDate);
                 return new ApiResult<>(average, 200, "Average glucose levels of patient.");
             }
