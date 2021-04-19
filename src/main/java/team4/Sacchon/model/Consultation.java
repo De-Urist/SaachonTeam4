@@ -1,6 +1,7 @@
 package team4.Sacchon.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;

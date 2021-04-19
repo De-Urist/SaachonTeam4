@@ -5,7 +5,9 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.ChiefDoctor;
+import team4.Sacchon.model.Credentials;
 import team4.Sacchon.repository.ChiefDoctorRepository;
+import team4.Sacchon.repository.CredentialsRepository;
 import team4.Sacchon.representation.ChiefDoctorRepresentation;
 
 import javax.persistence.EntityManager;
@@ -27,21 +29,24 @@ public class RegisterChiefResource extends ServerResource {
         EntityManager em = JpaUtil.getEntityManager();
         ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(em);
         chiefDoctorRepository.save(chiefDoctor);
+        new CredentialsRepository(em).save(new Credentials(chiefDoctor.getUsername(), chiefDoctor.getPassword()));
+        em.close();
         return new ApiResult<>(chiefDoctorRepresentation, 200, "The chief doctor was successfully created");
     }
 
     public boolean usernameExists(String candidateUsername) {
         EntityManager em = JpaUtil.getEntityManager();
-        ChiefDoctor chiefDoctor;
+        Credentials credentials;
         try {
-            chiefDoctor = em.createQuery("SELECT c from ChiefDoctor c where c.username= :candidate", ChiefDoctor.class)
+            credentials = em.createQuery("SELECT c from Credentials c where c.username= :candidate", Credentials.class)
                     .setParameter("candidate", candidateUsername)
                     .getSingleResult();
         } catch (Exception e) {
             System.out.println(e);
             return false;
         }
-        return chiefDoctor != null;
+        em.close();
+        return credentials != null;
     }
 
     @Get("json")
