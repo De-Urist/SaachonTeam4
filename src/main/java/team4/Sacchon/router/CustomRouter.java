@@ -14,10 +14,9 @@ public class CustomRouter {
     public Router publicResources() {
         Router router = new Router();
         router.attach("/ping", PingServerResource.class);
-        router.attach("/registerpatient", RegisterPatientResource.class);
-        router.attach("/registerdoctor", RegisterDoctorResource.class);
-        router.attach("/registerchief", RegisterChiefResource.class);
-
+        router.attach("/register_patient", RegisterPatientResource.class);
+        router.attach("/register_doctor", RegisterDoctorResource.class);
+        router.attach("/register_chief", RegisterChiefDoctorResource.class);
         return router;
     }
 

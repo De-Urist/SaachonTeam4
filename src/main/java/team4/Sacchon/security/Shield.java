@@ -18,8 +18,7 @@ public class Shield {
     }
 
     public ChallengeAuthenticator createApiGuard(){
-        ChallengeAuthenticator apiGuard = new ChallengeAuthenticator(
-                app.getContext(), ChallengeScheme.HTTP_BASIC, "realm");
+        ChallengeAuthenticator apiGuard = new ChallengeAuthenticator(app.getContext(), ChallengeScheme.HTTP_BASIC, "realm");
         Verifier verifier = new CustomVerifier();
         apiGuard.setVerifier(verifier);
 

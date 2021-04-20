@@ -22,6 +22,7 @@ public class MeasurementRepresentation {
 
     public MeasurementRepresentation(Measurement measurement) {
         if (measurement != null) {
+            id = measurement.getId();
             date = new SimpleDateFormat("dd/MM/yyyy").format(measurement.getDate());
             time = new SimpleDateFormat("HH:mm:ss").format(measurement.getDate());
             glucoseLevel = measurement.getGlucoseLevel();

@@ -21,6 +21,7 @@ public class ConsultationRepresentation {
 
     public ConsultationRepresentation(Consultation consultation) {
         if (consultation != null) {
+            id = consultation.getId();
             dosage = consultation.getDosage();
             prescriptionName = consultation.getPrescriptionName();
             creationDate = consultation.getCreationDate();

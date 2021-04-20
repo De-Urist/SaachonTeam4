@@ -12,6 +12,8 @@ import team4.Sacchon.representation.PatientRepresentation;
 
 import javax.persistence.EntityManager;
 
+import static team4.Sacchon.resource.ResourceUtils.usernameExistsInCredentials;
+
 public class RegisterPatientResource extends ServerResource {
 
     @Post("json")
@@ -23,9 +25,8 @@ public class RegisterPatientResource extends ServerResource {
         Patient patient = createPatientFromRepresantation(patientRepresentation);
         if (patient != null) {
             return new ApiResult<>(new PatientRepresentation(patient), 200, "The patient was successfully created");
-        } else {
-            return new ApiResult<>(null, 400, "The patient could not be created.");
         }
+        return new ApiResult<>(null, 400, "The patient could not be created.");
     }
 
     private Patient createPatientFromRepresantation(PatientRepresentation patientRepresentation) {
@@ -51,17 +52,11 @@ public class RegisterPatientResource extends ServerResource {
             return new ApiResult<>(null, 400, "No username was given to create the patient");
         if (patientRepresentation.getPassword() == null)
             return new ApiResult<>(null, 400, "No password was given to create the patient");
-        if (usernameExists(patientRepresentation.getUsername()))
+        if (patientRepresentation.getRole() == null || !patientRepresentation.getRole().equals("patient"))
+            return new ApiResult<>(null, 400, "Incorrect role was passed in the patient creation");
+        if (usernameExistsInCredentials(patientRepresentation.getUsername()))
             return new ApiResult<>(null, 400, "Duplicate username");
         return null;
-    }
-
-    private boolean usernameExists(String candidateUsername) {
-        EntityManager em = JpaUtil.getEntityManager();
-        CredentialsRepository credentialsRepository = new CredentialsRepository(em);
-        Credentials credentials = credentialsRepository.getByUsername(candidateUsername);
-        em.close();
-        return credentials != null;
     }
 
     @Get("json")
@@ -72,6 +67,6 @@ public class RegisterPatientResource extends ServerResource {
         } catch (Exception e) {
             return false;
         }
-        return usernameExists(candidateUsername);
+        return usernameExistsInCredentials(candidateUsername);
     }
 }

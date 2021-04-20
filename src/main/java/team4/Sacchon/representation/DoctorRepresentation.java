@@ -17,6 +17,7 @@ public class DoctorRepresentation {
 
     public DoctorRepresentation(Doctor doctor) {
         if (doctor != null) {
+            id = doctor.getId();
             name = doctor.getName();
             username = doctor.getUsername();
             password = doctor.getPassword();
