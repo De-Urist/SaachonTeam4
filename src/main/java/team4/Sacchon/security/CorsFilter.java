@@ -26,10 +26,8 @@ public class CorsFilter {
 
             @Override
             protected int beforeHandle(Request request, Response response) {
-
                 // Initialize response headers
-                Series<Header> responseHeaders = (Series<Header>) response
-                        .getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+                Series<Header> responseHeaders = (Series<Header>) response.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
                 if (responseHeaders == null) {
                     responseHeaders = new Series<Header>(Header.class);
                 }

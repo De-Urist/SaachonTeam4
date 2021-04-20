@@ -18,8 +18,9 @@ public class PatientRepresentation {
     private String role;
     private String uri;
 
-    public PatientRepresentation(Patient patient){
+    public PatientRepresentation(Patient patient) {
         if (patient != null){
+            id = patient.getId();
             name = patient.getName();
             username = patient.getUsername();
             password = patient.getPassword();

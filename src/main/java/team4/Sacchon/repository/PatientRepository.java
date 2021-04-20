@@ -48,13 +48,4 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .setParameter("username", username)
                 .getResultList();
     }
-
-    public void updateInformation(int id, String name, String username, String password) {
-        em.createQuery("UPDATE Patient p SET p.name = :name WHERE p.id = :id")
-                .setParameter("id", id)
-                .setParameter("name", name)
-                .executeUpdate();
-//                .setParameter("username", username)
-//                .setParameter("password", password);
-    }
 }

@@ -29,7 +29,7 @@ public class RegisterChiefResource extends ServerResource {
         EntityManager em = JpaUtil.getEntityManager();
         ChiefDoctorRepository chiefDoctorRepository = new ChiefDoctorRepository(em);
         chiefDoctorRepository.save(chiefDoctor);
-        new CredentialsRepository(em).save(new Credentials(chiefDoctor.getUsername(), chiefDoctor.getPassword()));
+        new CredentialsRepository(em).save(new Credentials(chiefDoctor.getUsername()));
         em.close();
         return new ApiResult<>(chiefDoctorRepresentation, 200, "The chief doctor was successfully created");
     }

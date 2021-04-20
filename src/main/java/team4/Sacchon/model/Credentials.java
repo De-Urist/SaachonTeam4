@@ -2,7 +2,6 @@ package team4.Sacchon.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.cfg.CreateKeySecondPass;
 
 import javax.persistence.*;
 
@@ -15,10 +14,8 @@ public class Credentials {
     private int id;
     @Column(unique = true)
     private String username;
-    private String password;
 
-    public Credentials(String username, String password) {
+    public Credentials(String username) {
         this.username = username;
-        this.password = password;
     }
 }

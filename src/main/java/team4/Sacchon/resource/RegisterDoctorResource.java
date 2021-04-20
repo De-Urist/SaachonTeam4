@@ -29,7 +29,7 @@ public class RegisterDoctorResource extends ServerResource {
         EntityManager em = JpaUtil.getEntityManager();
         DoctorRepository doctorRepository = new DoctorRepository(em);
         doctorRepository.save(doctor);
-        new CredentialsRepository(em).save(new Credentials(doctor.getUsername(), doctor.getPassword()));
+        new CredentialsRepository(em).save(new Credentials(doctor.getUsername()));
         em.close();
         return new ApiResult<>(doctorRepresentation, 200, "The doctor was successfully created");
     }

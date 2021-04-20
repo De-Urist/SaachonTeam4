@@ -16,22 +16,36 @@ public class RegisterPatientResource extends ServerResource {
 
     @Post("json")
     public ApiResult<PatientRepresentation> registerPatient(PatientRepresentation patientRepresentation) {
+        ApiResult<PatientRepresentation> checkedPatient = checkPatientInformation(patientRepresentation);
+        if (checkedPatient != null)
+            return checkedPatient;
+
+        Patient patient = createPatientFromRepresantation(patientRepresentation);
+        return new ApiResult<>(patientRepresentation, 200, "The patient was successfully created");
+    }
+
+    private Patient createPatientFromRepresantation(PatientRepresentation patientRepresentation) {
+        EntityManager em = JpaUtil.getEntityManager();
+        PatientRepository patientRepository = new PatientRepository(em);
+        Patient patient = patientRepresentation.createPatient();
+        patientRepository.save(patient);
+        new CredentialsRepository(em).save(new Credentials(patient.getUsername()));
+        em.close();
+        return patient;
+    }
+
+    private ApiResult<PatientRepresentation> checkPatientInformation(PatientRepresentation patientRepresentation) {
         if (patientRepresentation == null)
-            return new ApiResult<>(null, 400, "No input data to create the patient");
+            return new ApiResult<>(null, 400, "No input data were given to create the patient");
         if (patientRepresentation.getName() == null)
             return new ApiResult<>(null, 400, "No name was given to create the patient");
         if (patientRepresentation.getUsername() == null)
             return new ApiResult<>(null, 400, "No username was given to create the patient");
+        if (patientRepresentation.getPassword() == null)
+            return new ApiResult<>(null, 400, "No password was given to create the patient");
         if (usernameExists(patientRepresentation.getUsername()))
             return new ApiResult<>(null, 400, "Duplicate username");
-
-        Patient patient = patientRepresentation.createPatient();
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
-        patientRepository.save(patient);
-        new CredentialsRepository(em).save(new Credentials(patient.getUsername(), patient.getPassword()));
-        em.close();
-        return new ApiResult<>(patientRepresentation, 200, "The patient was successfully created");
+        return null;
     }
 
     public boolean usernameExists(String candidateUsername) {
