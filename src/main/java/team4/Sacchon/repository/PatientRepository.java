@@ -6,14 +6,14 @@ import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PatientRepository extends Repository <Patient,Integer>{
+public class PatientRepository extends Repository<Patient, Integer> {
 
     private EntityManager em;
+
     public PatientRepository(EntityManager em) {
         super(em);
         this.em = em;
@@ -29,30 +29,25 @@ public class PatientRepository extends Repository <Patient,Integer>{
         return Patient.class.getName();
     }
 
-
-    public Patient getByUsername(String username){
-        try{
-            return em.createQuery("SELECT p from Patient p WHERE p.username = :username", Patient.class)
-                    .setParameter("username", username)
-                    .getSingleResult();
-        } catch (NoResultException e){
-            return null;
-        }
+    public Patient getByUsername(String username) {
+        return em.createQuery("SELECT p from Patient p WHERE p.username = :username", Patient.class)
+                .setParameter("username", username)
+                .getResultList().stream().findFirst().orElse(null);
     }
 
-    public Doctor getDoctor(String username){
+    public Doctor getDoctor(String username) {
         return em.createQuery("SELECT d FROM Patient p inner join p.doctor d WHERE p.username = :username", Doctor.class)
                 .setParameter("username", username)
                 .getSingleResult();
     }
 
-    public List<Measurement> getMeasurements(String username){
+    public List<Measurement> getMeasurements(String username) {
         return em.createQuery("SELECT m FROM Patient p inner join p.measurement m WHERE p.username = :username", Measurement.class)
                 .setParameter("username", username)
                 .getResultList();
     }
 
-    public List<Consultation> getConsultations(String username, Date fromDate, Date toDate){
+    public List<Consultation> getConsultations(String username, Date fromDate, Date toDate) {
         return em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE p.username = :username AND c.creationDate BETWEEN :fromDate AND :toDate", Consultation.class)
                 .setParameter("username", username)
                 .setParameter("fromDate", fromDate)
@@ -60,7 +55,7 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .getResultList();
     }
 
-    public boolean canBeAdvised(int patientId){
+    public boolean canBeAdvised(int patientId) {
         List<Measurement> l1 = new ArrayList<>();
         l1 = em.createQuery("SELECT m FROM Patient p inner join p.measurement m WHERE m.patientId = :patientId", Measurement.class)
                 .setParameter("patientId", patientId)
@@ -68,7 +63,7 @@ public class PatientRepository extends Repository <Patient,Integer>{
         return l1.size() >= 30;
     }
 
-    public boolean shouldBeNotified(int patientId, Date currentDate){
+    public boolean shouldBeNotified(int patientId, Date currentDate) {
         List<Measurement> l1 = new ArrayList<>();
         l1 = em.createQuery("SELECT TOP 1 m FROM Patient p inner join p.measurement m WHERE m.patientId = :patientId", Measurement.class)
                 .setParameter("patientId", patientId)
