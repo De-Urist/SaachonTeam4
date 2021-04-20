@@ -25,21 +25,4 @@ public class MeasurementListResource extends ServerResource {
         }
         return measurementRepresentationList;
     }
-
-    @Post("json")
-    public MeasurementRepresentation add(MeasurementRepresentation measurementRepresentation){
-        if(measurementRepresentation == null){
-            return null;
-        }
-        if(measurementRepresentation.getId() == 0){
-            return null;
-        }
-        Measurement c = measurementRepresentation.createMeasurement();
-        EntityManager em = JpaUtil.getEntityManager();
-        MeasurementRepository measurementRepository = new MeasurementRepository(em);
-        measurementRepository.save(c);
-        MeasurementRepresentation cr = new MeasurementRepresentation(c);
-        return cr;
-    }
-
 }

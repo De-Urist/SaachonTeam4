@@ -1,6 +1,7 @@
 package team4.Sacchon.resource;
 
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
@@ -14,7 +15,7 @@ import javax.persistence.EntityManager;
 public class ValidateResource extends ServerResource {
 
     @Get("json")
-    public ApiResult<PatientRepresentation> validateUser(){
+    public ApiResult<Object> validateUser(){
 
         try {
             ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);

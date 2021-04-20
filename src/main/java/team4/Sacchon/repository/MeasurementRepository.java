@@ -4,6 +4,8 @@ import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import java.util.Date;
 import java.util.List;
 
 public class MeasurementRepository extends Repository<Measurement,Integer>{
@@ -25,8 +27,34 @@ public class MeasurementRepository extends Repository<Measurement,Integer>{
     }
 
     public Measurement getById(int id){
-        return em.createQuery("SELECT m from Measurement m WHERE m.id = :id", Measurement.class)
+        try {
+            return em.createQuery("SELECT m from Measurement m WHERE m.id = :id", Measurement.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public List<Measurement> getMeasurementsOf(int id){
+        return em.createQuery("SELECT m from Measurement m WHERE m.patient.id = :id", Measurement.class)
                 .setParameter("id", id)
+                .getResultList();
+    }
+
+    public double getAverageGlucoseOfMeasurements(int id, Date fromDate, Date toDate){
+        return em.createQuery("SELECT AVG (m.glucoseLevel) from Measurement m WHERE m.patient.id = :id AND m.date BETWEEN :fromDate AND :toDate", Double.class)
+                .setParameter("id", id)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .getSingleResult();
+    }
+
+    public double getAverageCarbOfMeasurements(int id, Date fromDate, Date toDate){
+        return em.createQuery("SELECT AVG (m.carbIntake) from Measurement m WHERE m.patient.id = :id AND m.date BETWEEN :fromDate AND :toDate", Double.class)
+                .setParameter("id", id)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
                 .getSingleResult();
     }
 

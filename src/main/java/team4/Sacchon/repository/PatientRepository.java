@@ -50,6 +50,15 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .getResultList();
     }
 
+    public void updateInformation(int id, String name, String username, String password) {
+        em.createQuery("UPDATE Patient p SET p.name = :name WHERE p.id = :id")
+                .setParameter("id", id)
+                .setParameter("name", name)
+                .executeUpdate();
+//                .setParameter("username", username)
+//                .setParameter("password", password);
+    }
+
     //Make it via Date range (TO DO)
     public List<Consultation> getConsultations(String username){
         return em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE p.username = :username", Consultation.class)
@@ -63,10 +72,10 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .setParameter("username", username)
                 .getSingleResult();
     }
+
     public Double getAverageCarbIntake(String username){
         return (Double) em.createQuery("SELECT avg(carbIntake) FROM Patient p inner join p.measurement avg(carbIntake) WHERE p.username = :username ")
                 .setParameter("username", username)
                 .getSingleResult();
     }
-
 }
