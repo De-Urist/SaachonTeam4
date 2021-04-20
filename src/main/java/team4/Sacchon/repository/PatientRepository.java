@@ -68,15 +68,6 @@ public class PatientRepository extends Repository <Patient,Integer>{
         return l1.size() >= 30;
     }
 
-    public void updateInformation(int id, String name, String username, String password) {
-        em.createQuery("UPDATE Patient p SET p.name = :name WHERE p.id = :id")
-                .setParameter("id", id)
-                .setParameter("name", name)
-                .executeUpdate();
-//                .setParameter("username", username)
-//                .setParameter("password", password);
-    }
-
     public boolean shouldBeNotified(int patientId, Date currentDate){
         List<Measurement> l1 = new ArrayList<>();
         l1 = em.createQuery("SELECT TOP 1 m FROM Patient p inner join p.measurement m WHERE m.patientId = :patientId", Measurement.class)
