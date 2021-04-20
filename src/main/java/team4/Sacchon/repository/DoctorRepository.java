@@ -6,13 +6,15 @@ import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-public class DoctorRepository extends Repository<Doctor, Integer> {
+public class DoctorRepository extends Repository <Doctor,Integer> {
 
     private EntityManager em;
-
     public DoctorRepository(EntityManager em) {
         super(em);
         this.em = em;
@@ -34,27 +36,33 @@ public class DoctorRepository extends Repository<Doctor, Integer> {
                 .getResultList().stream().findFirst().orElse(null);
     }
 
-    public List<Patient> getDoctorsPatientsById(int doctorId) {
+    public List<Patient> getDoctorsPatientsById(int doctorId){
         return em.createQuery("SELECT p FROM Patient pu INNER JOIN pu.patients p WHERE pu.id = :doctorId", Patient.class)
-                .setParameter("doctorId", doctorId)
-                .getResultList();
+                 .setParameter("doctorId", doctorId)
+                 .getResultList();
     }
 
-    public List<Patient> getDoctorsPatientsByUsername(String username) {
+    public List<Patient> getDoctorsPatientsByUsername(String username){
         return em.createQuery("SELECT p FROM Patient pu INNER JOIN pu.patients p WHERE pu.username = :username", Patient.class)
                 .setParameter("username", username)
                 .getResultList();
     }
 
-    public List<Consultation> getDoctorsConsultations(int doctorId) {
+    public List<Consultation> getDoctorsConsultations(int doctorId){
         return em.createQuery("SELECT c FROM Consultation cu INNER JOIN cu.consultations c WHERE cu.id = :doctorId", Consultation.class)
                 .setParameter("doctorId", doctorId)
                 .getResultList();
     }
 
-    public List<Measurement> getPatientMeasurements(String username) {
+    public List<Measurement> getPatientMeasurements(String username){
         return em.createQuery("SELECT p FROM Patient pm INNER JOIN pm.measurements p WHERE pm.username = :username", Measurement.class)
                 .setParameter("username", username)
+                .getResultList();
+    }
+
+    public List<Patient> getAllPatients(int doctorId){
+        return em.createQuery("SELECT p FROM Patient pu INNER JOIN pu.patients p WHERE pu.id = :doctorId OR p.doctor = null", Patient.class)
+                .setParameter("doctorId", doctorId)
                 .getResultList();
     }
 
@@ -63,12 +71,28 @@ public class DoctorRepository extends Repository<Doctor, Integer> {
         Date newDate = new Date();
         em.createQuery("UPDATE Consultation c SET c.dosage = :dosage, c.prescriptionName = :medName, c.lastModified = :newDate WHERE c.id = :id")
                 .setParameter("id", id)
-                .setParameter("medName", medName)
+                .setParameter("medName",medName)
                 .setParameter("dosage", dosage)
                 .setParameter("newDate", newDate)
                 .executeUpdate();
     }
 
-    //(TO DO) find patients that have not had a consultation in the last month
+    //Find patients that have not had a consultation in the last month
+    public List <Patient> getPatientsWithoutConsultations(){
+        Date currentDate = new Date();
+        LocalDate oldDateLocal = LocalDate.now();
+        LocalDate thirtyDaysAgo = oldDateLocal.minusDays(30);
+        Date oldDate = java.util.Date.from(thirtyDaysAgo.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
 
+        List<Patient> patientsThatHad = em.createQuery("SELECT DISTINCT p FROM Patient pc INNER JOIN pc.consultations p WHERE p.creationDate BETWEEN :startDate AND :endDate", Patient.class)
+                .setParameter("startDate", oldDate)
+                .setParameter("endDate", currentDate)
+                .getResultList();
+
+        List<Patient> allPatients = em.createQuery("SELECT p FROM Patient p",Patient.class).getResultList();
+        allPatients.removeAll(patientsThatHad);
+        return allPatients;
+    }
 }
