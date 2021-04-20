@@ -7,6 +7,8 @@ import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PatientRepository extends Repository <Patient,Integer>{
@@ -50,6 +52,22 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .getResultList();
     }
 
+    public List<Consultation> getConsultations(String username, Date fromDate, Date toDate){
+        return em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE p.username = :username AND c.creationDate BETWEEN :fromDate AND :toDate", Consultation.class)
+                .setParameter("username", username)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .getResultList();
+    }
+
+    public boolean canBeAdvised(int patientId){
+        List<Measurement> l1 = new ArrayList<>();
+        l1 = em.createQuery("SELECT m FROM Patient p inner join p.measurement m WHERE m.patientId = :patientId", Measurement.class)
+                .setParameter("patientId", patientId)
+                .getResultList();
+        return l1.size() >= 30;
+    }
+
     public void updateInformation(int id, String name, String username, String password) {
         em.createQuery("UPDATE Patient p SET p.name = :name WHERE p.id = :id")
                 .setParameter("id", id)
@@ -59,23 +77,12 @@ public class PatientRepository extends Repository <Patient,Integer>{
 //                .setParameter("password", password);
     }
 
-    //Make it via Date range (TO DO)
-    public List<Consultation> getConsultations(String username){
-        return em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE p.username = :username", Consultation.class)
-                .setParameter("username", username)
+    public boolean shouldBeNotified(int patientId, Date currentDate){
+        List<Measurement> l1 = new ArrayList<>();
+        l1 = em.createQuery("SELECT TOP 1 m FROM Patient p inner join p.measurement m WHERE m.patientId = :patientId", Measurement.class)
+                .setParameter("patientId", patientId)
                 .getResultList();
-    }
+        return true;
 
-    //Make it via Date range (TO DO)
-    public Double getAverageGlucoseLevel(String username){
-        return (Double) em.createQuery("SELECT avg(glucoseLevel) FROM Patient p inner join p.measurement avg(glucoseLevel) WHERE p.username = :username ")
-                .setParameter("username", username)
-                .getSingleResult();
-    }
-
-    public Double getAverageCarbIntake(String username){
-        return (Double) em.createQuery("SELECT avg(carbIntake) FROM Patient p inner join p.measurement avg(carbIntake) WHERE p.username = :username ")
-                .setParameter("username", username)
-                .getSingleResult();
     }
 }
