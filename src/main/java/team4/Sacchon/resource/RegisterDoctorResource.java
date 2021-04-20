@@ -52,7 +52,7 @@ public class RegisterDoctorResource extends ServerResource {
             return new ApiResult<>(null, 400, "No username was given to create the doctor");
         if (doctorRepresentation.getPassword() == null)
             return new ApiResult<>(null, 400, "No password was given to create the doctor");
-        if (doctorRepresentation.getRole() == null || !doctorRepresentation.getRole().equals("patient"))
+        if (doctorRepresentation.getRole() == null || !doctorRepresentation.getRole().equals("doctor"))
             return new ApiResult<>(null, 400, "Incorrect role was passed in the doctor creation");
         if (usernameExistsInCredentials(doctorRepresentation.getUsername()))
             return new ApiResult<>(null, 400, "Duplicate username");
