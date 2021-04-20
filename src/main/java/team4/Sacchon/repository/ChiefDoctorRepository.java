@@ -3,6 +3,7 @@ package team4.Sacchon.repository;
 import team4.Sacchon.model.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.Date;
 import java.util.List;
 
@@ -23,16 +24,19 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
     public String getClassName() {
         return ChiefDoctor.class.getName();
     }
-    
+
     public ChiefDoctor getByUsername(String username){
-        ChiefDoctor pt = em.createQuery("from ChiefDoctor p WHERE p.username= :username", ChiefDoctor.class)
-                .setParameter("username", username)
-                .getSingleResult();
-        return pt;
+        try {
+            return em.createQuery("SELECT p from ChiefDoctor p WHERE p.username= :username", ChiefDoctor.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<Doctor> getAllDoctors(){
-        return em.createQuery("SELECT d FROM Doctor d",Doctor.class).getResultList();
+        return em.createQuery("SELECT * FROM Doctor",Doctor.class).getResultList();
     }
 
     public List<Patient> getAllPatients(){
