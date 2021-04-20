@@ -21,17 +21,25 @@ public class RegisterPatientResource extends ServerResource {
             return checkedPatient;
 
         Patient patient = createPatientFromRepresantation(patientRepresentation);
-        return new ApiResult<>(patientRepresentation, 200, "The patient was successfully created");
+        if (patient != null) {
+            return new ApiResult<>(new PatientRepresentation(patient), 200, "The patient was successfully created");
+        } else {
+            return new ApiResult<>(null, 400, "The patient could not be created.");
+        }
     }
 
     private Patient createPatientFromRepresantation(PatientRepresentation patientRepresentation) {
-        EntityManager em = JpaUtil.getEntityManager();
-        PatientRepository patientRepository = new PatientRepository(em);
-        Patient patient = patientRepresentation.createPatient();
-        patientRepository.save(patient);
-        new CredentialsRepository(em).save(new Credentials(patient.getUsername()));
-        em.close();
-        return patient;
+        try {
+            EntityManager em = JpaUtil.getEntityManager();
+            PatientRepository patientRepository = new PatientRepository(em);
+            Patient patient = patientRepresentation.createPatient();
+            patientRepository.save(patient);
+            new CredentialsRepository(em).save(new Credentials(patient.getUsername()));
+            em.close();
+            return patient;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private ApiResult<PatientRepresentation> checkPatientInformation(PatientRepresentation patientRepresentation) {
@@ -48,17 +56,10 @@ public class RegisterPatientResource extends ServerResource {
         return null;
     }
 
-    public boolean usernameExists(String candidateUsername) {
+    private boolean usernameExists(String candidateUsername) {
         EntityManager em = JpaUtil.getEntityManager();
-        Credentials credentials;
-        try {
-            credentials = em.createQuery("SELECT c from Credentials c where c.username= :candidate", Credentials.class)
-                    .setParameter("candidate", candidateUsername)
-                    .getSingleResult();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
+        CredentialsRepository credentialsRepository = new CredentialsRepository(em);
+        Credentials credentials = credentialsRepository.getByUsername(candidateUsername);
         em.close();
         return credentials != null;
     }
