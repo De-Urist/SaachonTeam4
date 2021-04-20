@@ -39,43 +39,49 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
         return em.createQuery("SELECT p FROM Patient p",Patient.class).getResultList();
     }
 
-    //add measurement over time range (TO DO)
-    public List<Measurement> getMeasurementsByPatientName(String patientName){
-        return em.createQuery("SELECT m FROM Measurement mu inner join mu.patients m WHERE mu.username = :patientName",Measurement.class)
+    public List<Measurement> getMeasurementsByPatientNameAndDates(String patientName, Date startDate, Date endDate){
+        return em.createQuery("SELECT m FROM Measurement mu inner join mu.patients m WHERE mu.username = :patientName AND mu.date BETWEEN :startDate AND :endDate",Measurement.class)
                 .setParameter("patientName", patientName)
-                .getResultList();
-    }
-
-    //add consultations over a time range (TO DO)
-    public List<Consultation> getConsultationsByDoctorName(String doctorName){
-        return em.createQuery("SELECT c FROM Consultation cu inner join cu.doctors c WHERE cu.username = :doctorName",Consultation.class)
-                .setParameter("doctorName", doctorName)
-                .getResultList();
-    }
-
-    //In other words, without a doctor assigned to them.
-    public List<Patient> getPatientsWithoutConsultation(){
-        return em.createQuery("",Patient.class)
-                .getResultList();
-    }
-
-    //Needs a timestamp last time a patient had a doctor assigned to them?
-    public List<Patient> getPatientsLastConsultation(){
-        return em.createQuery("",Patient.class)
-                .getResultList();
-    }
-
-    //Returns a list of patients without measurements between startDate - endDate (TO DO)
-    public List<Patient> getInactivePatients(Date startDate, Date endDate){
-        return em.createQuery("SELECT p FROM Patient pm inner join pm.date p WHERE cu.username = :doctorName",Patient.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
     }
 
-    //Similarly as above but with consultations.lastModified (TO DO)
+    public List<Consultation> getConsultationsByDoctorNameAndDates(String doctorName, Date startDate, Date endDate){
+        return em.createQuery("SELECT c FROM Consultation cu inner join cu.doctors c WHERE cu.username = :doctorName AND cu.creationDate BETWEEN :startDate AND :endDate",Consultation.class)
+                .setParameter("doctorName", doctorName)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
+
+    public List<Patient> getPatientsWithoutDoctor(){
+        return em.createQuery("SELECT p FROM Patient WHERE p.doctor = null",Patient.class)
+                .getResultList();
+    }
+
+    public List<Patient> getPatientsWithoutConsultation(){
+        return em.createQuery("SELECT p FROM Patient WHERE p.consultation = null",Patient.class)
+                .getResultList();
+    }
+
+    //?
+    public List<Patient> getPatientsLastConsultation(){
+        return em.createQuery("SELECT TOP 1 p FROM Patient pc inner join pc.consultation p ORDER BY pc.consultation.creationDate DESC",Patient.class)
+                .getResultList();
+    }
+
+    //Returns a list of patients without measurements between startDate - endDate
+    public List<Patient> getInactivePatients(Date startDate, Date endDate){
+        return em.createQuery("SELECT p FROM Patient pm inner join pm.measurement p WHERE pm.measurement.date NOT BETWEEN :startDate AND :endDate",Patient.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
+
+    //Similarly as above but with consultations.lastModified
     public List<Doctor> getInactiveDoctors(Date startDate, Date endDate){
-        return em.createQuery("",Doctor.class)
+        return em.createQuery("SELECT d FROM Doctor dc inner join dc.consultation d WHERE dc.consultation.lastModified NOT BETWEEN :startDate AND :endDate",Doctor.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
