@@ -8,6 +8,7 @@ import org.restlet.engine.Engine;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.Role;
+import team4.Sacchon.Test.Tester1;
 import team4.Sacchon.router.CustomRouter;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.security.CorsFilter;
@@ -32,6 +33,7 @@ public class Main extends Application {
         EntityManager em = JpaUtil.getEntityManager();
         System.out.println("Connection established");
         //Entity Manager commands for testing
+        Tester1.testMe1(em);
         em.close();
 
         Component c = new Component();

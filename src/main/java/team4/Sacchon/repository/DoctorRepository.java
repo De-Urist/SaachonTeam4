@@ -36,31 +36,31 @@ public class DoctorRepository extends Repository <Doctor,Integer> {
     }
 
     public List<Patient> getDoctorsPatientsById(int doctorId){
-        return em.createQuery("SELECT p FROM Patient pu INNER JOIN pu.patients p WHERE pu.id = :doctorId", Patient.class)
+        return em.createQuery("SELECT p FROM Doctor d INNER JOIN d.patients p WHERE d.id = :doctorId", Patient.class)
                  .setParameter("doctorId", doctorId)
                  .getResultList();
     }
 
     public List<Patient> getDoctorsPatientsByUsername(String username){
-        return em.createQuery("SELECT p FROM Patient pu INNER JOIN pu.patients p WHERE pu.username = :username", Patient.class)
+        return em.createQuery("SELECT p FROM Doctor d INNER JOIN d.patients p WHERE d.username = :username", Patient.class)
                 .setParameter("username", username)
                 .getResultList();
     }
 
     public List<Consultation> getDoctorsConsultations(int doctorId){
-        return em.createQuery("SELECT c FROM Consultation cu INNER JOIN cu.consultations c WHERE cu.id = :doctorId", Consultation.class)
+        return em.createQuery("SELECT c FROM Doctor d INNER JOIN d.consultations c WHERE d.id = :doctorId", Consultation.class)
                 .setParameter("doctorId", doctorId)
                 .getResultList();
     }
 
     public List<Measurement> getPatientMeasurements(String username){
-        return em.createQuery("SELECT p FROM Patient pm INNER JOIN pm.measurements p WHERE pm.username = :username", Measurement.class)
+        return em.createQuery("SELECT m FROM Patient p INNER JOIN p.measurements m WHERE p.username = :username", Measurement.class)
                 .setParameter("username", username)
                 .getResultList();
     }
 
-    public List<Patient> getAllPatients(int doctorId){
-        return em.createQuery("SELECT p FROM Patient pu INNER JOIN pu.patients p WHERE pu.id = :doctorId OR p.doctor = null", Patient.class)
+    public List<Patient> getAllAvailablePatients(int doctorId){
+        return em.createQuery("SELECT p FROM Patient WHERE p.doctor.id = :doctorId OR p.doctor = null", Patient.class)
                 .setParameter("doctorId", doctorId)
                 .getResultList();
     }
@@ -85,13 +85,11 @@ public class DoctorRepository extends Repository <Doctor,Integer> {
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
 
-        List<Patient> patientsThatHad = em.createQuery("SELECT DISTINCT p FROM Patient pc INNER JOIN pc.consultations p WHERE p.creationDate BETWEEN :startDate AND :endDate", Patient.class)
+        List<Patient> patientsThatHad = em.createQuery("SELECT DISTINCT p FROM Consultation c INNER JOIN c.patient p WHERE c.creationDate NOT BETWEEN :startDate AND :endDate", Patient.class)
                 .setParameter("startDate", oldDate)
                 .setParameter("endDate", currentDate)
                 .getResultList();
 
-        List<Patient> allPatients = em.createQuery("SELECT p FROM Patient p",Patient.class).getResultList();
-        allPatients.removeAll(patientsThatHad);
-        return allPatients;
+        return patientsThatHad;
     }
 }
