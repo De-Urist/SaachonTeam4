@@ -25,7 +25,7 @@ public class CustomRouter {
         router.attach("/validate/{username}", ValidateResource.class);
         router.attach("/patient/{id}", PatientResource.class);
         router.attach("/patient/{id}/measurement", PatientMeasurementListResource.class);
-        router.attach("/patient/{id}/measurement/{type}", PatientMeasurementListResource.class);
+        router.attach("/patient/{id}/measurement_type>", PatientMeasurementTypeResource.class);
         router.attach("/patient/{id}/measurement/{measurement_id}", PatientMeasurementResource.class);
         router.attach("/patient", PatientListResource.class);
         

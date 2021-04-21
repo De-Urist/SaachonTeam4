@@ -60,10 +60,13 @@ public class PatientMeasurementListResource extends ServerResource {
         Date fromDate = null;
         Date toDate = null;
 
-        try {
-            fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
-            toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
-        } catch (Exception e) {
+        if (getQueryValue("fromDate") != null || getQueryValue("toDate") != null) {
+            try {
+                fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
+                toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
+            } catch (Exception e) {
+                return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
+            }
         }
 
         return getPatientMeasurements(fromDate, toDate);
@@ -75,7 +78,7 @@ public class PatientMeasurementListResource extends ServerResource {
         List<Measurement> measurements;
         if (fromDate == null || toDate == null) {
             measurements = measurementRepository.getMeasurementsOf(id);
-        }else {
+        } else {
             measurements = measurementRepository.getMeasurementsOfIdBetween(id, fromDate, toDate);
         }
 
