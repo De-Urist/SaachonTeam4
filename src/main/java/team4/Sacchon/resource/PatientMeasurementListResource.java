@@ -78,7 +78,7 @@ public class PatientMeasurementListResource extends ServerResource {
         List<Measurement> measurements;
         if (fromDate == null || toDate == null) {
             measurements = measurementRepository.getMeasurementsOf(id);
-        }else {
+        } else {
             measurements = measurementRepository.getMeasurementsOfIdBetween(id, fromDate, toDate);
         }
 

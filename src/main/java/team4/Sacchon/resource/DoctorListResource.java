@@ -4,9 +4,10 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
+import team4.Sacchon.model.Doctor;
 import team4.Sacchon.model.Patient;
 import team4.Sacchon.repository.ChiefDoctorRepository;
-import team4.Sacchon.repository.PatientRepository;
+import team4.Sacchon.representation.DoctorRepresentation;
 import team4.Sacchon.representation.PatientRepresentation;
 import team4.Sacchon.security.Shield;
 
@@ -16,36 +17,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PatientListResource extends ServerResource {
+public class DoctorListResource extends ServerResource {
 
     @Get("json")
-    public ApiResult<Object> getPatients() {
+    public ApiResult<Object> getInactiveDoctors() {
         ApiResult<Object> privileges = checkChiefDoctorPrivileges();
         if (privileges != null)
             return privileges;
 
         Date fromDate;
         Date toDate;
-        EntityManager em = JpaUtil.getEntityManager();
-        List<Patient> patients;
 
-
-        if (getQueryValue("fromDate") != null || getQueryValue("toDate") != null) {
-            try {
-                fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
-                toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
-            } catch (Exception e) {
-                return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
-            }
-            patients = new ChiefDoctorRepository(em).getInactivePatients(fromDate, toDate);
-        } else {
-            patients = new PatientRepository(em).findAll();
+        try {
+            fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
+            toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
+        } catch (Exception e) {
+            return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
         }
+
+        EntityManager em = JpaUtil.getEntityManager();
+        List<Doctor> doctors = new ChiefDoctorRepository(em).getInactiveDoctors(fromDate, toDate);
         em.close();
-        List<PatientRepresentation> patientRepresentations = patients.stream()
-                .map(PatientRepresentation::new)
+        List<DoctorRepresentation> doctorRepresentations = doctors.stream()
+                .map(DoctorRepresentation::new)
                 .collect(Collectors.toList());
-        return new ApiResult<>(patientRepresentations, 200, "All available patients");
+        return new ApiResult<>(doctorRepresentations, 200, "All inactive doctors");
     }
 
     private ApiResult<Object> checkChiefDoctorPrivileges() {

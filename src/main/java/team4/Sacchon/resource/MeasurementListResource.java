@@ -1,7 +1,6 @@
 package team4.Sacchon.resource;
 
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Measurement;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeasurementListResource extends ServerResource {
+
     @Get("json")
     public List<MeasurementRepresentation> getRepresentation(){
         EntityManager em = JpaUtil.getEntityManager();
