@@ -3,7 +3,7 @@ package team4.Sacchon.repository;
 import team4.Sacchon.model.*;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import java.util.Date;
 import java.util.List;
 
@@ -70,11 +70,18 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
 
     //call getPatientsWithoutConsultation get list1 once
     //then for each Patient in list1, call the method below
-    public Consultation getPatientsLastConsultation(String patientName){
-        List <Consultation> allConsultations = em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE p.username = :patientName ORDER BY c.creationDate DESC",Consultation.class)
-                .setParameter("patientName", patientName)
+    public Consultation getPatientLastConsultation(int patientId){
+        List <Consultation> allConsultations = em.createQuery("SELECT c FROM Consultation c WHERE c.patient.id = :patientId ORDER BY c.creationDate DESC",Consultation.class)
+                .setParameter("patientId", patientId)
                 .getResultList();
-        return  allConsultations.get(0); //DESC ordering, thus the first consultation is the newest (BY CREATION DATE NOT UPDATE DATE)
+        if (allConsultations.size() != 0)
+            return  allConsultations.get(0); //DESC ordering, thus the first consultation is the newest (BY CREATION DATE NOT UPDATE DATE)
+        return null;
+    }
+
+    public List getPatientAwaitingConsultation() {
+        Query q = em.createNativeQuery("select patient.* from patient where not patient.id in (select distinct patient_id from consultation where consultation.creationDate between dateadd(day, -30, getdate()) and getdate() )");
+        return q.getResultList();
     }
 
     //4

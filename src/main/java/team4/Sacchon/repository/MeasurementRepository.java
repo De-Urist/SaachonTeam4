@@ -1,5 +1,6 @@
 package team4.Sacchon.repository;
 
+import team4.Sacchon.model.Consultation;
 import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
@@ -82,5 +83,14 @@ public class MeasurementRepository extends Repository<Measurement, Integer> {
                 .setParameter("patientId", patientId)
                 .getResultList();
         return l1.size();
+    }
+
+    public Measurement getPatientFirstMeasurement(int patientId){
+        List <Measurement> measurements = em.createQuery("SELECT m FROM Measurement m WHERE m.patient.id = :patientId ORDER BY m.date ASC ",Measurement.class)
+                .setParameter("patientId", patientId)
+                .getResultList();
+        if (measurements.size() != 0)
+            return  measurements.get(0);
+        return null;
     }
 }

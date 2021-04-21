@@ -30,6 +30,8 @@ public class CustomRouter {
         router.attach("/patient", PatientListResource.class);
         router.attach("/doctor", DoctorListResource.class);
         router.attach("/doctor/{id}/consultation", DoctorConsultationListResource.class);
+        router.attach("/waiting_patients", WaitingPatientsResource.class);
+        router.attach("/patient/{id}/consultation", PatientConsultationResource.class);
 
         router.attach("/doctor/{id}", DoctorResource.class);
 //        router.attach("/chief", ChiefDoctorListResource.class);
