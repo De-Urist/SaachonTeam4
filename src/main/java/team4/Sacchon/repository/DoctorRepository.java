@@ -6,7 +6,6 @@ import team4.Sacchon.model.Measurement;
 import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
