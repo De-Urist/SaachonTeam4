@@ -6,12 +6,6 @@ import java.util.Date;
 
 public class DateChecker {
 
-    public Date getDateNow(){
-        long millis=System.currentTimeMillis();
-        java.sql.Date date = new java.sql.Date(millis);
-        return date;
-    }
-
     //This method will be used to find out if a patient did not
     //have a consultation the past 30 days
     //Accepts only LocalDate variables, requires conversion see below
@@ -38,13 +32,13 @@ public class DateChecker {
         else return patientLastLoginDate.compareTo(lastConsultationDate) < 0;
     }
 
-    //LocalDate -> Date
+    //Date -> LocalDate
     public LocalDate convertToLocalDate(Date dateToConvert) {
         return LocalDate.ofInstant(
                 dateToConvert.toInstant(), ZoneId.systemDefault());
     }
 
-    //Date -> LocalDate
+    //LocalDate -> Date
     public Date convertToDateViaInstant(LocalDate dateToConvert) {
         return java.util.Date.from(dateToConvert.atStartOfDay()
                 .atZone(ZoneId.systemDefault())
