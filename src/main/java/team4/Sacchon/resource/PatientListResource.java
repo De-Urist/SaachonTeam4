@@ -1,12 +1,13 @@
 package team4.Sacchon.resource;
 
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
+import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Patient;
 import team4.Sacchon.repository.PatientRepository;
 import team4.Sacchon.representation.PatientRepresentation;
+import team4.Sacchon.security.Shield;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -15,25 +16,26 @@ import java.util.stream.Collectors;
 public class PatientListResource extends ServerResource {
 
     @Get("json")
-    public List<PatientRepresentation> getPatient(){
+    public ApiResult<Object> getPatients() {
+        ApiResult<Object> privileges = checkChiefDoctorPrivileges();
+        if (privileges != null)
+            return privileges;
+
         EntityManager em = JpaUtil.getEntityManager();
         List<Patient> patients = new PatientRepository(em).findAll();
         em.close();
-
-        return patients.stream()
+        List<PatientRepresentation> patientRepresentations = patients.stream()
                 .map(PatientRepresentation::new)
                 .collect(Collectors.toList());
+        return new ApiResult<>(patientRepresentations, 200, "All available customers");
     }
 
-    @Post("json")
-    public PatientRepresentation add(PatientRepresentation patientRepresentation){
-        if (patientRepresentation == null || patientRepresentation.getName() == null)
-            return null;
-
-        Patient patient = patientRepresentation.createPatient();
-        EntityManager em = JpaUtil.getEntityManager();
-        new PatientRepository(em).save(patient);
-        em.close();
-        return new PatientRepresentation(patient);
+    private ApiResult<Object> checkChiefDoctorPrivileges(){
+        try {
+            ResourceUtils.checkRole(this, Shield.ROLE_CHIEF);
+        }catch (AuthorizationException e) {
+            return new ApiResult<>(null, 403, "Forbidden");
+        }
+        return null;
     }
 }

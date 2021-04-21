@@ -43,6 +43,14 @@ public class MeasurementRepository extends Repository<Measurement, Integer> {
                 .getResultList();
     }
 
+    public List<Measurement> getMeasurementsOfIdBetween(int id, Date fromDate, Date toDate) {
+        return em.createQuery("SELECT m from Measurement m WHERE m.patient.id = :id AND m.date BETWEEN :fromDate AND :toDate", Measurement.class)
+                .setParameter("id", id)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .getResultList();
+    }
+
     public double getAverageGlucoseOfMeasurements(int id, Date fromDate, Date toDate) {
         try {
             return em.createQuery("SELECT AVG (m.glucoseLevel) from Measurement m WHERE m.patient.id = :id AND m.date BETWEEN :fromDate AND :toDate", Double.class)
