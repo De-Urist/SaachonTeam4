@@ -17,4 +17,6 @@ public class ChiefDoctor{
     private String name;
     private String username;
     private String password;
+
+
 }
