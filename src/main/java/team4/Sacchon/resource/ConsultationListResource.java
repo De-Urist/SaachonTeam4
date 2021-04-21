@@ -26,19 +26,19 @@ public class ConsultationListResource extends ServerResource {
         return consultationRepresentationList;
     }
 
-    @Post("json")
-    public ConsultationRepresentation add(ConsultationRepresentation consultationRepresentation){
-        if(consultationRepresentation == null){
-            return null;
-        }
-        if(consultationRepresentation.getPrescriptionName() == null || consultationRepresentation.getDosage() == 0){
-            return null;
-        }
-        Consultation c = consultationRepresentation.createConsultation();
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
-        consultationRepository.save(c);
-        ConsultationRepresentation cr = new ConsultationRepresentation(c);
-        return cr;
-    }
+//    @Post("json")
+//    public ConsultationRepresentation add(ConsultationRepresentation consultationRepresentation){
+//        if(consultationRepresentation == null){
+//            return null;
+//        }
+//        if(consultationRepresentation.getPrescriptionName() == null || consultationRepresentation.getDosage() == 0){
+//            return null;
+//        }
+//        Consultation c = consultationRepresentation.createConsultation();
+//        EntityManager em = JpaUtil.getEntityManager();
+//        ConsultationRepository consultationRepository = new ConsultationRepository(em);
+//        consultationRepository.save(c);
+//        ConsultationRepresentation cr = new ConsultationRepresentation(c);
+//        return cr;
+//    }
 }

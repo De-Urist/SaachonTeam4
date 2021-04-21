@@ -7,6 +7,8 @@ import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Doctor;
 import team4.Sacchon.model.Patient;
 import team4.Sacchon.repository.ChiefDoctorRepository;
+import team4.Sacchon.repository.DoctorRepository;
+import team4.Sacchon.repository.PatientRepository;
 import team4.Sacchon.representation.DoctorRepresentation;
 import team4.Sacchon.representation.PatientRepresentation;
 import team4.Sacchon.security.Shield;
@@ -20,28 +22,32 @@ import java.util.stream.Collectors;
 public class DoctorListResource extends ServerResource {
 
     @Get("json")
-    public ApiResult<Object> getInactiveDoctors() {
+    public ApiResult<Object> getDoctors() {
         ApiResult<Object> privileges = checkChiefDoctorPrivileges();
         if (privileges != null)
             return privileges;
 
         Date fromDate;
         Date toDate;
-
-        try {
-            fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
-            toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
-        } catch (Exception e) {
-            return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
-        }
-
         EntityManager em = JpaUtil.getEntityManager();
-        List<Doctor> doctors = new ChiefDoctorRepository(em).getInactiveDoctors(fromDate, toDate);
+        List<Doctor> doctors;
+
+        if (getQueryValue("fromDate") != null || getQueryValue("toDate") != null) {
+            try {
+                fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
+                toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
+            } catch (Exception e) {
+                return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
+            }
+            doctors = new ChiefDoctorRepository(em).getInactiveDoctors(fromDate, toDate);
+        } else {
+            doctors = new DoctorRepository(em).findAll();
+        }
         em.close();
         List<DoctorRepresentation> doctorRepresentations = doctors.stream()
                 .map(DoctorRepresentation::new)
                 .collect(Collectors.toList());
-        return new ApiResult<>(doctorRepresentations, 200, "All inactive doctors");
+        return new ApiResult<>(doctorRepresentations, 200, "All available doctors");
     }
 
     private ApiResult<Object> checkChiefDoctorPrivileges() {

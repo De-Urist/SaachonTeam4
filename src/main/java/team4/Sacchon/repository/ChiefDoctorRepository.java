@@ -49,9 +49,9 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
     }
 
     //2
-    public List<Consultation> getConsultationsByDoctorNameAndDates(String doctorName, Date startDate, Date endDate){
-        return em.createQuery("SELECT c FROM Doctor d inner join d.consultation c WHERE d.username = :doctorName AND c.creationDate BETWEEN :startDate AND :endDate",Consultation.class)
-                .setParameter("doctorName", doctorName)
+    public List<Consultation> getConsultationsByDoctorIdAndDates(int doctorId, Date startDate, Date endDate){
+        return em.createQuery("SELECT c FROM Doctor d inner join d.consultation c WHERE d.id = :doctorId AND c.creationDate BETWEEN :startDate AND :endDate",Consultation.class)
+                .setParameter("doctorId", doctorId)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import team4.Sacchon.model.Consultation;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -13,8 +14,10 @@ public class ConsultationRepresentation {
     private int id;
     private int dosage;
     private String prescriptionName;
-    private Date creationDate;
-    private Date lastModified;
+    private String creationDate;
+    private String creationTime;
+    private String modifiedDate;
+    private String modifiedTime;
     private int doctorId;
     private int patientId;
     private String uri;
@@ -24,8 +27,10 @@ public class ConsultationRepresentation {
             id = consultation.getId();
             dosage = consultation.getDosage();
             prescriptionName = consultation.getPrescriptionName();
-            creationDate = consultation.getCreationDate();
-            lastModified = consultation.getLastModified();
+            creationDate = new SimpleDateFormat("dd/MM/yyyy").format(consultation.getCreationDate());
+            creationTime = new SimpleDateFormat("HH:mm:ss").format(consultation.getCreationDate());
+            modifiedDate = new SimpleDateFormat("dd/MM/yyyy").format(consultation.getLastModified());
+            modifiedTime = new SimpleDateFormat("HH:mm:ss").format(consultation.getLastModified());
             if (consultation.getDoctor() != null)
                 doctorId = consultation.getDoctor().getId();
             if (consultation.getPatient() != null)
@@ -34,12 +39,12 @@ public class ConsultationRepresentation {
         }
     }
 
-    public Consultation createConsultation() {
+    public Consultation createConsultation() throws Exception{
         Consultation consultation = new Consultation();
         consultation.setDosage(dosage);
         consultation.setPrescriptionName(prescriptionName);
-        consultation.setCreationDate(creationDate);
-        consultation.setLastModified(lastModified);
+        consultation.setCreationDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(creationDate + " " + creationTime + ":00"));
+        consultation.setLastModified(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(modifiedDate + " " + modifiedTime + ":00"));
         return consultation;
     }
 }

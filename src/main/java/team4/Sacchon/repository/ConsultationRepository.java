@@ -4,6 +4,7 @@ import team4.Sacchon.model.Consultation;
 import team4.Sacchon.model.Measurement;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public class ConsultationRepository extends Repository <Consultation, Integer>{
 
@@ -29,10 +30,10 @@ public class ConsultationRepository extends Repository <Consultation, Integer>{
                 .getSingleResult();
     }
 
-    public Consultation getByDoctorId(int doctorId){
+    public List<Consultation> getByDoctorId(int doctorId){
         return em.createQuery("SELECT c FROM Doctor d inner join d.consultations c WHERE d.id = :doctorId" , Consultation.class)
                 .setParameter("doctorId", doctorId)
-                .getSingleResult();
+                .getResultList();
     }
 
     public Consultation getByBoth(int doctorId, int patientId){
