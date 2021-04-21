@@ -27,7 +27,7 @@ public class PatientMeasurementTypeResource extends ServerResource {
             fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
             toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
         } catch (Exception e) {
-            return new ApiResult<>(null, 400, "Invalid date");
+            return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
         }
 
         try {
