@@ -30,7 +30,10 @@ public class WaitingPatientsResource extends ServerResource {
             Patient patient = patientRepository.read(value);
             patientRepresentations.add(new PatientRepresentation(patient));
         }
-        return new ApiResult<>(patientRepresentations, 200, "Patients waiting for consultations.");
+        if (patientRepresentations.size() != 0)
+            return new ApiResult<>(patientRepresentations, 200, "Patients waiting for consultations.");
+        else
+            return new ApiResult<>(null, 400, "No patients are waiting for consultations");
     }
 
     private ApiResult<Object> checkChiefDoctorPrivileges(){
