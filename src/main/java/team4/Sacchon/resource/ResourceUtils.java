@@ -5,11 +5,13 @@ import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Credentials;
 import team4.Sacchon.repository.CredentialsRepository;
+import team4.Sacchon.representation.ConsultationRepresentation;
 import team4.Sacchon.representation.DoctorRepresentation;
 import team4.Sacchon.representation.MeasurementRepresentation;
 import team4.Sacchon.representation.PatientRepresentation;
-
+import java.text.SimpleDateFormat;
 import javax.persistence.EntityManager;
+
 
 public class ResourceUtils {
 
@@ -71,5 +73,20 @@ public class ResourceUtils {
         if (usernameExistsInCredentials(doctorRepresentation.getUsername()))
             return new ApiResult<>(null, 400, "Duplicate username");
         return null;
+    }
+    protected static ApiResult<Object> checkConsultationInformation(ConsultationRepresentation consultationRepresentation) {
+        if (consultationRepresentation == null)
+            return new ApiResult<>(null, 400, "No input data were given to create the consultation");
+        if (consultationRepresentation.getCreationDate()== null)
+            return new ApiResult<>(null, 400, "No date was given to create the consultation");
+        if (consultationRepresentation.getCreationTime() == null)
+            return new ApiResult<>(null, 400, "No time was given to create the consultation");
+        if (consultationRepresentation.getDosage() == 0)
+            return new ApiResult<>(null, 400, "No dosage was given to create the consultation");
+        if (consultationRepresentation.getPrescriptionName() == null)
+            return new ApiResult<>(null, 400, "No prescription name was given to create the consultation");
+        return null;
+
+
     }
 }
