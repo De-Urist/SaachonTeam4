@@ -24,10 +24,10 @@ public class ConsultationRepository extends Repository <Consultation, Integer>{
         return Consultation.class.getName();
     }
 
-    public Consultation getByPatientId(int patientId){
-        return em.createQuery("SELECT c FROM Patient p inner join p.consultations c WHERE p.id = :patientId ", Consultation.class)
+    public List<Consultation> getByPatientId(int patientId){
+        return em.createQuery("SELECT c FROM Consultation c WHERE c.patient.id = :patientId ORDER BY c.creationDate DESC ", Consultation.class)
                 .setParameter("patientId", patientId)
-                .getSingleResult();
+                .getResultList();
     }
 
     public List<Consultation> getByDoctorId(int doctorId){

@@ -64,20 +64,9 @@ public class PatientRepository extends Repository <Patient,Integer>{
         return l1.size() >= 30;
     }
 
-    public boolean shouldBeNotified(int patientId, Date currentDate){
-        List<Consultation> l1 = new ArrayList<>();
-        int id = patientId;
-        l1 = em.createQuery("SELECT c FROM Patient p inner join p.consultation c WHERE c.patientId = :patientId ORDER BY c.lastModified DESC" , Consultation.class)
+    public Consultation getLastModifiedConsultationForPatient(int patientId) {
+        return em.createQuery("SELECT c FROM Consultation c WHERE c.patient.id = :patientId ORDER BY c.lastModified DESC", Consultation.class)
                 .setParameter("patientId", patientId)
-                .getResultList();
-        Consultation latestConsultation = l1.get(0);
-        Patient patient = em.createQuery("SELECT p from Patient p WHERE p.id = :id", Patient.class)
-                .setParameter("id", id)
-                .getSingleResult();
-
-        if(patient.getLastLogin().compareTo(latestConsultation.getLastModified()) > 0){
-            return false;
-        }
-        else return patient.getLastLogin().compareTo(latestConsultation.getLastModified()) < 0;
+                .getResultList().stream().findFirst().orElse(null);
     }
 }

@@ -29,8 +29,10 @@ public class ConsultationRepresentation {
             prescriptionName = consultation.getPrescriptionName();
             creationDate = new SimpleDateFormat("dd/MM/yyyy").format(consultation.getCreationDate());
             creationTime = new SimpleDateFormat("HH:mm:ss").format(consultation.getCreationDate());
-            modifiedDate = new SimpleDateFormat("dd/MM/yyyy").format(consultation.getLastModified());
-            modifiedTime = new SimpleDateFormat("HH:mm:ss").format(consultation.getLastModified());
+            if (consultation.getLastModified() != null) {
+                modifiedDate = new SimpleDateFormat("dd/MM/yyyy").format(consultation.getLastModified());
+                modifiedTime = new SimpleDateFormat("HH:mm:ss").format(consultation.getLastModified());
+            }
             if (consultation.getDoctor() != null)
                 doctorId = consultation.getDoctor().getId();
             if (consultation.getPatient() != null)

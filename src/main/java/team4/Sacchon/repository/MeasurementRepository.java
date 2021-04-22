@@ -39,13 +39,13 @@ public class MeasurementRepository extends Repository<Measurement, Integer> {
     }
 
     public List<Measurement> getMeasurementsOf(int id) {
-        return em.createQuery("SELECT m from Measurement m WHERE m.patient.id = :id", Measurement.class)
+        return em.createQuery("SELECT m from Measurement m WHERE m.patient.id = :id ORDER BY m.date desc ", Measurement.class)
                 .setParameter("id", id)
                 .getResultList();
     }
 
     public List<Measurement> getMeasurementsOfIdBetween(int id, Date fromDate, Date toDate) {
-        return em.createQuery("SELECT m from Measurement m WHERE m.patient.id = :id AND m.date BETWEEN :fromDate AND :toDate", Measurement.class)
+        return em.createQuery("SELECT m from Measurement m WHERE m.patient.id = :id AND m.date BETWEEN :fromDate AND :toDate ORDER BY m.date desc ", Measurement.class)
                 .setParameter("id", id)
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)

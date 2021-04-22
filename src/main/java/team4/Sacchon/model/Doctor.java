@@ -1,11 +1,14 @@
 package team4.Sacchon.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Doctor extends User{
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
@@ -13,4 +16,9 @@ public class Doctor extends User{
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<Consultation> consultations;
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }

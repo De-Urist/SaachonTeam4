@@ -1,12 +1,15 @@
 package team4.Sacchon.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Patient extends User{
     private Date lastLogin;
@@ -17,4 +20,9 @@ public class Patient extends User{
     private List<Measurement> measurementList;
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Consultation> consultationList;
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }
