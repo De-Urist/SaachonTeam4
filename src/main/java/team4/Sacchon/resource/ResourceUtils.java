@@ -5,6 +5,7 @@ import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Credentials;
 import team4.Sacchon.repository.CredentialsRepository;
+import team4.Sacchon.representation.DoctorRepresentation;
 import team4.Sacchon.representation.MeasurementRepresentation;
 import team4.Sacchon.representation.PatientRepresentation;
 
@@ -53,6 +54,22 @@ public class ResourceUtils {
             return new ApiResult<>(null, 400, "No glucose level data were given to create the measurement");
         if (measurementRepresentation.getCarbIntake() == 0)
             return new ApiResult<>(null, 400, "No carb intake data were given to create the measurement");
+        return null;
+    }
+
+    protected static ApiResult<Object> checkDoctorInformation(DoctorRepresentation doctorRepresentation) {
+        if (doctorRepresentation == null)
+            return new ApiResult<>(null, 400, "No input data were given to create the doctor");
+        if (doctorRepresentation.getName() == null)
+            return new ApiResult<>(null, 400, "No name was given to create the doctor");
+        if (doctorRepresentation.getUsername() == null)
+            return new ApiResult<>(null, 400, "No username was given to create the doctor");
+        if (doctorRepresentation.getPassword() == null)
+            return new ApiResult<>(null, 400, "No password was given to create the doctor");
+        if (doctorRepresentation.getRole() == null || !doctorRepresentation.getRole().equals("doctor"))
+            return new ApiResult<>(null, 400, "Incorrect role was passed in the doctor creation");
+        if (usernameExistsInCredentials(doctorRepresentation.getUsername()))
+            return new ApiResult<>(null, 400, "Duplicate username");
         return null;
     }
 }
