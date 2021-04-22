@@ -29,47 +29,7 @@ public class ConsultationListResource extends ServerResource {
         return consultationRepresentationList;
     }
 
-    @Post("json")
-    public ApiResult<Object> add(ConsultationRepresentation consultationRepresentation){
 
-        ApiResult<Object> privileges = checkDoctorPrivileges();
-        if (privileges != null)
-            return privileges;
-
-        ApiResult<Object> checkedMeasurement = checkConsultationInformation(consultationRepresentation);
-        if (checkedMeasurement != null) {
-            return checkedMeasurement;
-        }
-
-        if(consultationRepresentation == null){
-            return null;
-        }
-        if(consultationRepresentation.getPrescriptionName() == null || consultationRepresentation.getDosage() == 0){
-            return null;
-        }
-        Consultation c ;
-                try {
-                c=consultationRepresentation.createConsultation();}
-                catch (Exception e){
-                    return new ApiResult<>(null, 400, "Could not create consultation");
-                }
-        EntityManager em = JpaUtil.getEntityManager();
-        ConsultationRepository consultationRepository = new ConsultationRepository(em);
-        new ConsultationRepository(em).save(c);
-        em.close();
-        return new ApiResult<>(consultationRepresentation, 200, "Consultation has been added");
-
-
-    }
-
-    private ApiResult<Object> checkDoctorPrivileges() {
-        try {
-            ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
-        } catch (AuthorizationException e) {
-            return new ApiResult<>(null, 403, "Forbidden");
-        }
-        return null;
-    }
 
 
 }

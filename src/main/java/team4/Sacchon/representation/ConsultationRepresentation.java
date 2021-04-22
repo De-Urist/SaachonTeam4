@@ -45,8 +45,9 @@ public class ConsultationRepresentation {
         Consultation consultation = new Consultation();
         consultation.setDosage(dosage);
         consultation.setPrescriptionName(prescriptionName);
-        consultation.setCreationDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(creationDate + " " + creationTime + ":00"));
-        consultation.setLastModified(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(modifiedDate + " " + modifiedTime + ":00"));
+        consultation.setCreationDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(creationDate + " " + creationTime));
+        if (modifiedDate.length() != 0)
+            consultation.setLastModified(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(modifiedDate + " " + modifiedTime));
         return consultation;
     }
 }

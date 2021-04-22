@@ -4,6 +4,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
+import team4.Sacchon.model.Consultation;
 import team4.Sacchon.model.Patient;
 import team4.Sacchon.repository.ChiefDoctorRepository;
 import team4.Sacchon.repository.PatientRepository;
@@ -28,7 +29,6 @@ public class PatientListResource extends ServerResource {
         Date toDate;
         EntityManager em = JpaUtil.getEntityManager();
         List<Patient> patients;
-
 
         if (getQueryValue("fromDate") != null || getQueryValue("toDate") != null) {
             try {

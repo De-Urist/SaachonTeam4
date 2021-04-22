@@ -61,7 +61,7 @@ public class PatientRepository extends Repository <Patient,Integer>{
         l1 = em.createQuery("SELECT m FROM Measurement m WHERE m.patient.id = :patientId", Measurement.class)
                 .setParameter("patientId", patientId)
                 .getResultList();
-        return l1.size() >= 30;
+        return l1.size() >= 3;
     }
 
     public Consultation getLastModifiedConsultationForPatient(int patientId) {
