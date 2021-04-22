@@ -5,8 +5,10 @@ import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Credentials;
 import team4.Sacchon.model.Doctor;
+import team4.Sacchon.model.Patient;
 import team4.Sacchon.repository.CredentialsRepository;
 import team4.Sacchon.repository.DoctorRepository;
+import team4.Sacchon.repository.PatientRepository;
 import team4.Sacchon.representation.DateTimeRepresantation;
 import team4.Sacchon.representation.DoctorRepresentation;
 import team4.Sacchon.security.Shield;
@@ -35,17 +37,22 @@ public class DoctorResource extends ServerResource {
 
         EntityManager em = JpaUtil.getEntityManager();
         DoctorRepository doctorRepository = new DoctorRepository(em);
-        String doctorUsername = doctorRepository.read(id).getUsername();
-        boolean doctorDeletionResult = doctorRepository.delete(id);
-        boolean credentialsDeletionResult = false;
-        if (doctorDeletionResult){
-            CredentialsRepository credentialsRepository = new CredentialsRepository(em);
-            Credentials cred = credentialsRepository.getByUsername(doctorUsername);
-            credentialsDeletionResult = credentialsRepository.delete(cred.getId());
+        Doctor doctor = doctorRepository.read(id);
+        String doctorUsername = doctor.getUsername();
+        PatientRepository patientRepository = new PatientRepository(em);
+        for (Patient p : doctor.getPatients()) {
+            p.setDoctor(null);
+            patientRepository.update(p);
         }
-        int code = (doctorDeletionResult && credentialsDeletionResult) ? 200 : 400;
-        String description = (doctorDeletionResult ? "Doctor deleted" : "Doctor could not be deleted");
-        return new ApiResult<>(doctorDeletionResult, code, description);
+        doctor.setUsername(null);
+        doctorRepository.update(doctor);
+        CredentialsRepository credentialsRepository = new CredentialsRepository(em);
+        Credentials cred = credentialsRepository.getByUsername(doctorUsername);
+        boolean credentialsDeletionResult = credentialsRepository.delete(cred.getId());
+
+        int code = (credentialsDeletionResult) ? 200 : 400;
+        String description = (credentialsDeletionResult ? "Doctor deleted" : "Doctor could not be deleted");
+        return new ApiResult<>(credentialsDeletionResult, code, description);
     }
 
     @Put("json")

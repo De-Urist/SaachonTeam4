@@ -13,7 +13,6 @@ public class CustomRouter {
 
     public Router publicResources() {
         Router router = new Router();
-        router.attach("/ping", PingServerResource.class);
         router.attach("/register_patient", RegisterPatientResource.class);
         router.attach("/register_doctor", RegisterDoctorResource.class);
         router.attach("/register_chief", RegisterChiefDoctorResource.class);
@@ -34,14 +33,10 @@ public class CustomRouter {
         router.attach("/patient/{id}/consultation_last", PatientLastConsultationResource.class);
         router.attach("/patient/{id}/consultation", PatientConsultationResource.class);
         router.attach("/patient/{id}/consultation_updates", PatientConsultationUpdatesResource.class);
-
+        router.attach("/patients_with_no_consultation/{id}", PatientListWithNoConsResource.class);
         router.attach("/doctor/{id}", DoctorResource.class);
-//        router.attach("/chief", ChiefDoctorListResource.class);
-        router.attach("/chief/{id}", ChiefDoctorResource.class);
-//        router.attach("/consultation", ConsultationListResource.class);
+
         router.attach("/consultation/{id}", ConsultationResource.class);
-//        router.attach("/measurement", MeasurementListResource.class);
-        router.attach("/measurement/{id}", MeasurementResource.class);
         return router;
     }
 }

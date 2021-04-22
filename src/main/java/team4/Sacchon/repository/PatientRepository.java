@@ -58,7 +58,7 @@ public class PatientRepository extends Repository <Patient,Integer>{
 
     public boolean canBeAdvised(int patientId){
         List<Measurement> l1 = new ArrayList<>();
-        l1 = em.createQuery("SELECT m FROM Patient p inner join p.measurement m WHERE m.patientId = :patientId", Measurement.class)
+        l1 = em.createQuery("SELECT m FROM Measurement m WHERE m.patient.id = :patientId", Measurement.class)
                 .setParameter("patientId", patientId)
                 .getResultList();
         return l1.size() >= 30;

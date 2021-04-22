@@ -12,6 +12,7 @@ import team4.Sacchon.repository.DoctorRepository;
 import team4.Sacchon.repository.PatientRepository;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
@@ -20,33 +21,36 @@ import java.util.stream.Collectors;
 
 public class PatientListWithNoConsResource extends ServerResource {
 
+    private int id;
+
+    @Override
+    protected void doInit() {
+        id = Integer.parseInt(getAttribute("id"));
+    }
+
     @Get("json")
     public ApiResult<Object> getPatientsWithNoCons() {
         ApiResult<Object> privileges = checkDoctorPrivileges();
         if (privileges != null)
             return privileges;
 
-        Date fromDate;
-        Date toDate;
+
         EntityManager em = JpaUtil.getEntityManager();
-        List<Patient> patients;
-        if (getQueryValue("fromDate") != null || getQueryValue("toDate") != null) {
-            try {
-                fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("fromDate"));
-                toDate = new SimpleDateFormat("dd/MM/yyyy").parse(getQueryValue("toDate"));
-            } catch (Exception e) {
-                return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
+        List<Patient> patientsWithoutConsultations = new DoctorRepository(em).getPatientsWithoutConsultations(id);
+        PatientRepository patientRepository = new PatientRepository(em);
+        List<PatientRepresentation> eligiblePatients = new ArrayList<>();
+        for (Patient p : patientsWithoutConsultations) {
+            if (patientRepository.canBeAdvised(p.getId())){
+                eligiblePatients.add(new PatientRepresentation(p));
             }
-            patients = new DoctorRepository(em).getPatientsWithoutConsultations();
-        } else {
-            patients = new PatientRepository(em).findAll();
         }
         em.close();
-        List<PatientRepresentation> patientRepresentations = patients.stream()
-                .map(PatientRepresentation::new)
-                .collect(Collectors.toList());
-        return new ApiResult<>(patientRepresentations, 200, "All patients without consultations in the last month");
+        if (eligiblePatients.size() == 0) {
+            return new ApiResult<>(null, 400, "No available patients for consultations.");
+        }
+        return new ApiResult<>(eligiblePatients, 200, "All available patients for consultations.");
     }
+
     private ApiResult<Object> checkDoctorPrivileges() {
         try {
             ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
@@ -55,7 +59,6 @@ public class PatientListWithNoConsResource extends ServerResource {
         }
         return null;
     }
-
 }
 
 

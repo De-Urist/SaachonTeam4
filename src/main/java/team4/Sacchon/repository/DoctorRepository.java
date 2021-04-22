@@ -11,9 +11,10 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-public class DoctorRepository extends Repository <Doctor,Integer> {
+public class DoctorRepository extends Repository<Doctor, Integer> {
 
     private EntityManager em;
+
     public DoctorRepository(EntityManager em) {
         super(em);
         this.em = em;
@@ -35,31 +36,31 @@ public class DoctorRepository extends Repository <Doctor,Integer> {
                 .getResultList().stream().findFirst().orElse(null);
     }
 
-    public List<Patient> getDoctorsPatientsById(int doctorId){
+    public List<Patient> getDoctorsPatientsById(int doctorId) {
         return em.createQuery("SELECT p FROM Doctor d INNER JOIN d.patients p WHERE d.id = :doctorId", Patient.class)
-                 .setParameter("doctorId", doctorId)
-                 .getResultList();
+                .setParameter("doctorId", doctorId)
+                .getResultList();
     }
 
-    public List<Patient> getDoctorsPatientsByUsername(String username){
+    public List<Patient> getDoctorsPatientsByUsername(String username) {
         return em.createQuery("SELECT p FROM Doctor d INNER JOIN d.patients p WHERE d.username = :username", Patient.class)
                 .setParameter("username", username)
                 .getResultList();
     }
 
-    public List<Consultation> getDoctorsConsultations(int doctorId){
+    public List<Consultation> getDoctorsConsultations(int doctorId) {
         return em.createQuery("SELECT c FROM Doctor d INNER JOIN d.consultations c WHERE d.id = :doctorId", Consultation.class)
                 .setParameter("doctorId", doctorId)
                 .getResultList();
     }
 
-    public List<Measurement> getPatientMeasurements(String username){
+    public List<Measurement> getPatientMeasurements(String username) {
         return em.createQuery("SELECT m FROM Patient p INNER JOIN p.measurements m WHERE p.username = :username", Measurement.class)
                 .setParameter("username", username)
                 .getResultList();
     }
 
-    public List<Patient> getAllAvailablePatients(int doctorId){
+    public List<Patient> getAllAvailablePatients(int doctorId) {
         return em.createQuery("SELECT p FROM Patient WHERE p.doctor.id = :doctorId OR p.doctor = null", Patient.class)
                 .setParameter("doctorId", doctorId)
                 .getResultList();
@@ -70,14 +71,14 @@ public class DoctorRepository extends Repository <Doctor,Integer> {
         Date newDate = new Date();
         em.createQuery("UPDATE Consultation c SET c.dosage = :dosage, c.prescriptionName = :medName, c.lastModified = :newDate WHERE c.id = :id")
                 .setParameter("id", id)
-                .setParameter("medName",medName)
+                .setParameter("medName", medName)
                 .setParameter("dosage", dosage)
                 .setParameter("newDate", newDate)
                 .executeUpdate();
     }
 
     //Find patients that have not had a consultation in the last month
-    public List <Patient> getPatientsWithoutConsultations(){
+    public List<Patient> getPatientsWithoutConsultations(int doctorId) {
         Date currentDate = new Date();
         LocalDate oldDateLocal = LocalDate.now();
         LocalDate thirtyDaysAgo = oldDateLocal.minusDays(30);
@@ -85,11 +86,25 @@ public class DoctorRepository extends Repository <Doctor,Integer> {
                 .atZone(ZoneId.systemDefault())
                 .toInstant());
 
-        List<Patient> patientsThatHad = em.createQuery("SELECT DISTINCT p FROM Consultation c INNER JOIN c.patient p WHERE c.creationDate NOT BETWEEN :startDate AND :endDate", Patient.class)
+        return em.createQuery("SELECT DISTINCT p FROM Consultation c INNER JOIN c.patient p WHERE c.creationDate NOT BETWEEN :startDate AND :endDate AND p.doctor.id = :doctorId OR p.doctor.id is NULL", Patient.class)
                 .setParameter("startDate", oldDate)
                 .setParameter("endDate", currentDate)
+                .setParameter("doctorId", doctorId)
                 .getResultList();
+    }
 
-        return patientsThatHad;
+    public List<Patient> getPatientsWithoutEnoughMeasurements(int doctorId) {
+        Date currentDate = new Date();
+        LocalDate oldDateLocal = LocalDate.now();
+        LocalDate thirtyDaysAgo = oldDateLocal.minusDays(30);
+        Date oldDate = java.util.Date.from(thirtyDaysAgo.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        return em.createQuery("SELECT DISTINCT p FROM Consultation c INNER JOIN c.patient p WHERE c.creationDate NOT BETWEEN :startDate AND :endDate AND p.doctor.id = :doctorId OR p.doctor.id is NULL", Patient.class)
+                .setParameter("startDate", oldDate)
+                .setParameter("endDate", currentDate)
+                .setParameter("doctorId", doctorId)
+                .getResultList();
     }
 }
