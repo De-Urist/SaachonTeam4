@@ -35,6 +35,7 @@ public class CustomRouter {
         router.attach("/patient/{id}/consultation_updates", PatientConsultationUpdatesResource.class);
         router.attach("/patients_with_no_consultation/{id}", PatientListWithNoConsResource.class);
         router.attach("/doctor/{id}", DoctorResource.class);
+        router.attach("/doctor/{id}/patient", DoctorPatientListResource.class);
 
         router.attach("/consultation/{id}", ConsultationResource.class);
         return router;

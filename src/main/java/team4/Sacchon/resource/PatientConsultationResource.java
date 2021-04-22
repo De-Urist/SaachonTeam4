@@ -47,8 +47,12 @@ public class PatientConsultationResource extends ServerResource {
     private ApiResult<Object> checkPatientPrivileges(){
         try {
             ResourceUtils.checkRole(this, Shield.ROLE_PATIENT);
-        }catch (AuthorizationException e) {
-            return new ApiResult<>(null, 403, "Forbidden");
+        }catch (AuthorizationException patientException) {
+            try {
+                ResourceUtils.checkRole(this, Shield.ROLE_DOCTOR);
+            } catch (AuthorizationException doctorException) {
+                return new ApiResult<>(null, 403, "Forbidden");
+            }
         }
         return null;
     }

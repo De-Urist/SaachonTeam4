@@ -81,13 +81,15 @@ public class PatientMeasurementListResource extends ServerResource {
         } else {
             measurements = measurementRepository.getMeasurementsOfIdBetween(id, fromDate, toDate);
         }
-
-        List<MeasurementRepresentation> measurementRepresentationList = new ArrayList<>();
-        for (Measurement m : measurements) {
-            measurementRepresentationList.add(new MeasurementRepresentation(m));
-        }
         em.close();
-        return new ApiResult<>(measurementRepresentationList, 200, "Past patient measurements");
+        if (measurements.size() != 0) {
+            List<MeasurementRepresentation> measurementRepresentationList = new ArrayList<>();
+            for (Measurement m : measurements) {
+                measurementRepresentationList.add(new MeasurementRepresentation(m));
+            }
+            return new ApiResult<>(measurementRepresentationList, 200, "Past patient measurements");
+        }
+        return new ApiResult<>(null, 400, "The patient has no past measurements");
     }
 
     private ApiResult<Object> checkPatientPrivileges() {

@@ -61,7 +61,7 @@ public class DoctorRepository extends Repository<Doctor, Integer> {
     }
 
     public List<Patient> getAllAvailablePatients(int doctorId) {
-        return em.createQuery("SELECT p FROM Patient WHERE p.doctor.id = :doctorId OR p.doctor = null", Patient.class)
+        return em.createQuery("SELECT p FROM Patient p WHERE p.doctor.id = :doctorId OR p.doctor is null", Patient.class)
                 .setParameter("doctorId", doctorId)
                 .getResultList();
     }
