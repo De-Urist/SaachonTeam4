@@ -13,6 +13,7 @@ import team4.Sacchon.security.Shield;
 
 import javax.persistence.EntityManager;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,10 @@ public class PatientListResource extends ServerResource {
             } catch (Exception e) {
                 return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
             }
-            patients = new ChiefDoctorRepository(em).getInactivePatients(fromDate, toDate);
+            List<Patient> patientsWithMeasurementsInDate = new ChiefDoctorRepository(em).getInactivePatients(fromDate, toDate);
+            List<Patient> allPatients = new PatientRepository(em).findAll();
+            patients = new ArrayList<>(allPatients);
+            patients.removeAll(patientsWithMeasurementsInDate);
         } else {
             patients = new PatientRepository(em).findAll();
         }

@@ -56,13 +56,17 @@ public class DoctorConsultationListResource extends ServerResource {
         } else {
             consultations = new ChiefDoctorRepository(em).getConsultationsByDoctorIdAndDates(id, fromDate, toDate);
         }
-
-        List<ConsultationRepresentation> consultationRepresentationList = new ArrayList<>();
-        for (Consultation c : consultations) {
-            consultationRepresentationList.add(new ConsultationRepresentation(c));
+        if (consultations.size() != 0) {
+            List<ConsultationRepresentation> consultationRepresentationList = new ArrayList<>();
+            for (Consultation c : consultations) {
+                consultationRepresentationList.add(new ConsultationRepresentation(c));
+            }
+            em.close();
+            return new ApiResult<>(consultationRepresentationList, 200, "Past doctor consultations");
+        }else {
+            em.close();
+            return new ApiResult<>(null, 400, "The doctor has no consultations.");
         }
-        em.close();
-        return new ApiResult<>(consultationRepresentationList, 200, "Past doctor consultations");
     }
 
     @Post("json")

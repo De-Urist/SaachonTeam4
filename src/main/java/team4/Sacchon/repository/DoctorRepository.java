@@ -107,4 +107,8 @@ public class DoctorRepository extends Repository<Doctor, Integer> {
                 .setParameter("doctorId", doctorId)
                 .getResultList();
     }
+
+    public List<Doctor> getNotDeletedDoctors() {
+        return em.createQuery("SELECT d FROM Doctor d WHERE d.username is not null", Doctor.class).getResultList();
+    }
 }

@@ -50,7 +50,7 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
 
     //2
     public List<Consultation> getConsultationsByDoctorIdAndDates(int doctorId, Date startDate, Date endDate){
-        return em.createQuery("SELECT c FROM Doctor d inner join d.consultation c WHERE d.id = :doctorId AND c.creationDate BETWEEN :startDate AND :endDate",Consultation.class)
+        return em.createQuery("SELECT c FROM Consultation c WHERE c.doctor.id = :doctorId AND c.creationDate BETWEEN :startDate AND :endDate",Consultation.class)
                 .setParameter("doctorId", doctorId)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
@@ -87,7 +87,7 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
     //4
     //Returns a list of patients without measurements between startDate - endDate
     public List<Patient> getInactivePatients(Date startDate, Date endDate){
-        return em.createQuery("SELECT p FROM Measurement m inner join m.patient p WHERE m.date NOT BETWEEN :startDate AND :endDate",Patient.class)
+        return em.createQuery("SELECT DISTINCT p FROM Measurement m inner join m.patient p WHERE m.date BETWEEN :startDate AND :endDate",Patient.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
@@ -96,7 +96,7 @@ public class ChiefDoctorRepository extends Repository<ChiefDoctor,Integer>{
     //5
     //Similarly as above but with consultations.lastModified
     public List<Doctor> getInactiveDoctors(Date startDate, Date endDate){
-        return em.createQuery("SELECT d FROM Consultation c inner join c.doctor d WHERE c.lastModified NOT BETWEEN :startDate AND :endDate",Doctor.class)
+        return em.createQuery("SELECT DISTINCT d FROM Consultation c inner join c.doctor d WHERE c.creationDate BETWEEN :startDate AND :endDate AND d.username is not null",Doctor.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();

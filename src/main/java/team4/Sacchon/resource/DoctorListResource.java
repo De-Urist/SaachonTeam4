@@ -15,6 +15,7 @@ import team4.Sacchon.security.Shield;
 
 import javax.persistence.EntityManager;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,15 +40,25 @@ public class DoctorListResource extends ServerResource {
             } catch (Exception e) {
                 return new ApiResult<>(null, 400, "Both dates should be present with format: dd/MM/yyyy");
             }
-            doctors = new ChiefDoctorRepository(em).getInactiveDoctors(fromDate, toDate);
+            List<Doctor> doctorsWithConsultationsInDate = new ChiefDoctorRepository(em).getInactiveDoctors(fromDate, toDate);
+            List<Doctor> alldoctors = new DoctorRepository(em).getNotDeletedDoctors();
+            doctors = new ArrayList<>(alldoctors);
+            doctors.removeAll(doctorsWithConsultationsInDate);
         } else {
             doctors = new DoctorRepository(em).findAll();
         }
         em.close();
-        List<DoctorRepresentation> doctorRepresentations = doctors.stream()
-                .map(DoctorRepresentation::new)
-                .collect(Collectors.toList());
-        return new ApiResult<>(doctorRepresentations, 200, "All available doctors");
+        if (doctors.size() != 0) {
+            List<DoctorRepresentation> doctorRepresentations = new ArrayList<>();
+            for (Doctor doc: doctors) {
+                if (!(doc.getUsername() == null)) {
+                    doctorRepresentations.add(new DoctorRepresentation(doc));
+                }
+            }
+            return new ApiResult<>(doctorRepresentations, 200, "All available doctors");
+        }
+        return new ApiResult<>(null, 400, "No doctors were found");
+
     }
 
     private ApiResult<Object> checkChiefDoctorPrivileges() {
