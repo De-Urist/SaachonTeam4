@@ -6,6 +6,7 @@ import org.restlet.resource.ServerResource;
 import team4.Sacchon.exception.AuthorizationException;
 import team4.Sacchon.jpautil.JpaUtil;
 import team4.Sacchon.model.Patient;
+import team4.Sacchon.repository.ConsultationRepository;
 import team4.Sacchon.representation.PatientRepresentation;
 import team4.Sacchon.security.Shield;
 import team4.Sacchon.repository.DoctorRepository;
@@ -36,12 +37,16 @@ public class PatientListWithNoConsResource extends ServerResource {
 
 
         EntityManager em = JpaUtil.getEntityManager();
-        List<Patient> patientsWithoutConsultations = new DoctorRepository(em).getPatientsWithoutConsultations(id);
+        List<Patient> allPatients = new PatientRepository(em).getPatientsofDoctorOrNoDoctor(id);
+        List<Patient> consultedPatients = new ConsultationRepository(em).getPatientsWithConsultations();
+        allPatients.removeAll(consultedPatients);
         PatientRepository patientRepository = new PatientRepository(em);
         List<PatientRepresentation> eligiblePatients = new ArrayList<>();
-        for (Patient p : patientsWithoutConsultations) {
-            if (patientRepository.canBeAdvised(p.getId())){
-                eligiblePatients.add(new PatientRepresentation(p));
+        for (Patient p : allPatients) {
+            if (p.getDoctor() == null || p.getDoctor().getId() == id){
+                if (patientRepository.canBeAdvised(p.getId())){
+                    eligiblePatients.add(new PatientRepresentation(p));
+                }
             }
         }
         em.close();

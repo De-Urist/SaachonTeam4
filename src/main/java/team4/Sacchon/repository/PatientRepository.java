@@ -69,4 +69,10 @@ public class PatientRepository extends Repository <Patient,Integer>{
                 .setParameter("patientId", patientId)
                 .getResultList().stream().findFirst().orElse(null);
     }
+
+    public List<Patient> getPatientsofDoctorOrNoDoctor(int doctorId) {
+        return em.createQuery("SELECT p FROM Patient p WHERE p.doctor.id = :doctorId or p.doctor.id is NULL", Patient.class)
+                .setParameter("doctorId", doctorId)
+                .getResultList();
+    }
 }

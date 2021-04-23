@@ -2,8 +2,12 @@ package team4.Sacchon.repository;
 
 import team4.Sacchon.model.Consultation;
 import team4.Sacchon.model.Measurement;
+import team4.Sacchon.model.Patient;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 public class ConsultationRepository extends Repository <Consultation, Integer>{
@@ -41,6 +45,21 @@ public class ConsultationRepository extends Repository <Consultation, Integer>{
                 .setParameter("doctorId", doctorId)
                 .setParameter("patientId", patientId)
                 .getSingleResult();
+    }
+
+    public List<Patient> getPatientsWithConsultations() {
+        Date currentDate = new Date();
+        LocalDate oldDateLocal = LocalDate.now();
+        LocalDate thirtyDaysAgo = oldDateLocal.minusDays(30);
+        Date oldDate = java.util.Date.from(thirtyDaysAgo.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        return em.createQuery("SELECT DISTINCT p FROM Consultation c INNER JOIN c.patient p WHERE c.creationDate BETWEEN :startDate AND :endDate", Patient.class)
+                .setParameter("startDate", oldDate)
+                .setParameter("endDate", currentDate)
+//                .setParameter("doctorId", doctorId)
+                .getResultList();
     }
 
 }
